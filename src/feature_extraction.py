@@ -35,36 +35,38 @@ def name_tagging(text):
     txt="" 
     i=1  
     for token in doc:
-        if i>10:
+        if i>6:
             break
         elif token.pos_ in ['PROPN']:
             txt=txt+" "+token.text
             i+=1
     
-    doc1=nlp(txt)
     i=1
     txt1=""      
     for ent in doc.ents:
         if (i>10):
             break
         if ent.label_ not in ['PERSON']:
+            # print(ent.text,ent.label_)
             txt1=txt1+" "+ent.text
             i=i+1
-
+            
+    
     txt = (txt.lower()).split()
     txt1 = (txt1.lower()).split()
-    
+    # print(txt)
+    # print(txt1)
   
                     
-    for word1 in txt1:
-        txt = [word for word in txt if word != word1]
+    # for word1 in txt1:
+    #     txt = [word for word in txt if word != word1]
         
-    str=""
-    for word in txt:
-        str=str+" "+word
+    # str=""
+    # for word in txt:
+    #     str=str+" "+word
         
-           
-    return str
+    # print(str)       
+    return txt
     
     
 def name_extract(text):    
@@ -73,7 +75,7 @@ def name_extract(text):
     
     model =pipeline("text2text-generation",model="google/flan-t5-large")
     
-    instruction="Extract the only name of the person from the resume:"
+    instruction="Extract the only full name of the person from the resume:"
     
     input_text=f"{instruction}\n{txt}"
 
@@ -114,7 +116,7 @@ def education_text(lines):
      
     index=0
     for line in lines:
-      if 'education' in line.lower():
+      if ('Education' in line) or ('EDUCATION' in line):
          index = lines.index(line)
          break
      
@@ -129,23 +131,33 @@ def education_extract(lines):
 
     model =pipeline("text2text-generation",model="google/flan-t5-large")
     
-    instruction="extract the bachelors,masters,graduation education details of the person"
+    instruction="extract the Education or EDUCATION details of the person from the resume"
     
     input_text=f"{instruction}\n{text}"
 
     response=model(input_text,max_length=50,do_sample=False)
     
     response = response[0]['generated_text']
-    
-    
-    print(response)
-    
-    
+
     return response    
   
 
+def degree_extraction(text):
+    
+    degree_set = ['Masters',"Bachelor's",'BA','ARTS','B.Tech' ]
+    
+    for word in text.split():
+        print(word)
+        if word in degree_set:
+            print("found",word)
+  
+  
+
+
+
 
 def experience_extract(lines):
+    
     pattern = r"\d{1,2}\+?\s?years"
     for line in lines:
         if 'experience' in line.lower():

@@ -3,8 +3,6 @@ import pdfplumber
 import os
 import sys
 sys.path.append('/home/shiva/Desktop/ML/Files/NLP/src')
-import pdf_text_extraction
-
 from src.pipelines import pipeline
 
 app = Flask(__name__)

@@ -1,7 +1,7 @@
 import pdf_text_extraction
 from pdf_text_extraction import extract_text_from_pdf
 from preprocessing import text_to_words,split_lines
-from feature_extraction import phone_num_extrcat,name_extract,experience_extract,education_extract,pass_out_year_extract
+from feature_extraction import phone_num_extrcat,name_extract,experience_extract,education_extract,pass_out_year_extract,degree_extraction
 
 
 def pipeline(path):
@@ -20,16 +20,22 @@ def pipeline(path):
          
    education = education_extract(lines)
    
+   degree_extraction(education)
+   
    passout = pass_out_year_extract(lines)
 
    
    if exp ==None:
       exp = "Experience not found"
       
+    
+   
    print(name)
    print(phone_num)
+   print(passout)
+   print(education)
    print(exp)
-   print(education)   
+      
       
    
    return name,phone_num,exp,passout,education
@@ -55,7 +61,15 @@ path7 = "/home/shiva/Downloads/resumes/Shaik Luqman.pdf"
 
 path8 = "/home/shiva/Downloads/resumes/Swpana Kumari Sahu.pdf"
 
-   
+path9 = "/home/shiva/Downloads/resumes/Kashetti_Venu.pdf"
+
+path10 = "/home/shiva/Downloads/resumes/Dublin-Resume-Template-Modern.pdf"
+
+path11 = "/home/shiva/Downloads/resumes/Sydney-Resume-Template-Modern.pdf"
+
+path12 = "/home/shiva/Downloads/resumes/Vienna-Modern-Resume-Template.pdf"
+
+
 
 if __name__== '__main__':
-   pipeline(path7)   
+   pipeline(path8)   
