@@ -40,7 +40,6 @@ def name_tagging(text):
         elif token.pos_ in ['PROPN']:
             txt=txt+" "+token.text
             i+=1
-    print(txt)
     
     doc1=nlp(txt)
     i=1
@@ -51,14 +50,11 @@ def name_tagging(text):
         if ent.label_ not in ['PERSON']:
             txt1=txt1+" "+ent.text
             i=i+1
-    print(txt1)
-    
-    
+
     txt = (txt.lower()).split()
     txt1 = (txt1.lower()).split()
     
-    print(txt)
-    print(txt1)
+  
                     
     for word1 in txt1:
         txt = [word for word in txt if word != word1]
@@ -85,13 +81,14 @@ def name_extract(text):
 
     response=model(input_text,max_length=50,do_sample=False)
     
-    print(response)
+    response = response[0]['generated_text']
+    
+    return response
     
     
-    #the bachelors or masters
+    
 def education_extract(text):    
     
-    # txt = name_tagging(text)    
     
     model =pipeline("text2text-generation",model="google/flan-t5-large")
     
@@ -101,12 +98,10 @@ def education_extract(text):
 
     response=model(input_text,max_length=50,do_sample=False)
     
-    print(response)    
-
-
-
+    response = response[0]['generated_text']
     
-    
+    return response    
+  
 
 
 def experience_extract(lines):
@@ -115,7 +110,9 @@ def experience_extract(lines):
         if 'experience' in line.lower():
             exp = re.findall(pattern,line)
             if len(exp)>0:
-                return exp
+                print(exp)
+                return exp[0]
+            
     
             
             

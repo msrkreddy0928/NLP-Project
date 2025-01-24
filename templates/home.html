@@ -1,36 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Feature extraction from Resume</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    </head>
-    <body>
-        <div class="container">
-            <form id="predict-form" action="/predict" method="POST" enctype="multipart/form-data">
-                <h1>Feature extraction from Resume</h1>
-    
-                <div class="input-section">
-                    <label for="image-url">Enter Image URL:</label>
-                    <input type="text" id="image-url" name="url" placeholder="Enter image URL here">
-                </div>
-    
-                <div class="upload-section">    
-                    <label for="image-upload">Or Upload an Image:</label>
-                    <input type="file" id="image-upload" name="image-upload" accept="image/*">
-                </div>
-    
-                <button type="submit" id="predict-btn">Predict</button>
-            </form>
-    
-            <h2 id = "graphhead",class="graph"></h2>
-    
-            <canvas id="bargraph" width="400" height="400"></canvas>
-    
-            <div id="predictionText" style="font-size: 18px; margin-top: 20px; font-weight: bold;"></div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload Form</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="form-container">
+        <h1>Upload Your File</h1>
+        <form action="/extract" method="POST" enctype="multipart/form-data">
+            <label for="fileInput">Choose a PDF or DOC file:</label>
+            <input type="file" id="fileInput" name="file" accept=".pdf, .doc, .docx" required />
+            <button type="submit">Submit</button>
+        </form>
+
+        <div class="output" id="output">
+           
+            <h3>Extracted Information:</h3>
+            <div id="nameOutput"><label for="nameOutput">Name:</label>{{nameOut}}</div>
+            <div id="phoneOutput"><label for="phoneOutput">Phone Number:</label>{{phonenumOut}}</div>
+            <div id="qualificationOutput"><label for="qualificationOutput">Qualification:</label>{{qualificationOut}}</div>
+            <div id="expyearsOutput"><label for="expyearsOutput">Years of Experience:</label>{{expyearsOut}}</div>
+
         </div>
-    
+    </div>
+</body>
 </html>
