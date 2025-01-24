@@ -19,15 +19,9 @@ def feature_extraction():
     
     doc = request.files['file']
     
-    file_path = os.path.join("/home/shiva/Desktop/Files",doc.filename)
+    name,phone_num,years_of_exp,passout,qualification = pipeline(doc)
     
-    doc.save(file_path)
-    
-    name,phone_num,years_of_exp,qualification = pipeline(file_path)
-    
-    print(name)
-    
-    return render_template('home.html',nameOut=name,phonenumOut=phone_num,qualificationOut=qualification,expyearsOut=years_of_exp)
+    return render_template('home.html',nameOut=name,phonenumOut=phone_num,passoutOut=passout,qualificationOut=qualification,expyearsOut=years_of_exp)
     
     
 

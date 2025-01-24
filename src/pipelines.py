@@ -1,7 +1,7 @@
 import pdf_text_extraction
 from pdf_text_extraction import extract_text_from_pdf
 from preprocessing import text_to_words,split_lines
-from feature_extraction import phone_num_extrcat,name_extract,experience_extract,education_extract
+from feature_extraction import phone_num_extrcat,name_extract,experience_extract,education_extract,pass_out_year_extract
 
 
 def pipeline(path):
@@ -17,24 +17,22 @@ def pipeline(path):
    exp=experience_extract(lines)
    
    name = name_extract(text)
-   
-   index=0
-   for line in lines:
-      if 'education' in line.lower():
-         index = lines.index(line)
-         break
          
-   education = education_extract(lines[index:index+20])
+   education = education_extract(lines)
    
-   print(name)
-   print(phone_num)
-   print(exp)
-   print(education)
+   passout = pass_out_year_extract(lines)
+
    
    if exp ==None:
       exp = "Experience not found"
+      
+   print(name)
+   print(phone_num)
+   print(exp)
+   print(education)   
+      
    
-   return name,phone_num,exp,education
+   return name,phone_num,exp,passout,education
    
    
 
@@ -55,7 +53,9 @@ path6 = "/home/shiva/Downloads/resumes/Nanneboina Ramana.pdf"
 
 path7 = "/home/shiva/Downloads/resumes/Shaik Luqman.pdf"
 
-path8 = "/home/shiva/Downloads/resumes/Swpana Kumari Sahu.pdf"   
+path8 = "/home/shiva/Downloads/resumes/Swpana Kumari Sahu.pdf"
+
+   
 
 if __name__== '__main__':
-   pipeline(path2)
+   pipeline(path7)   

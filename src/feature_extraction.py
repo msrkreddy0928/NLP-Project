@@ -4,7 +4,7 @@ from nltk import pos_tag,ne_chunk
 from nltk.tokenize import WhitespaceTokenizer
 import spacy
 from transformers import pipeline    
-
+from datetime import date
 
 
 nltk.download('punkt')          
@@ -64,8 +64,6 @@ def name_tagging(text):
         str=str+" "+word
         
            
-            
-            
     return str
     
     
@@ -85,20 +83,63 @@ def name_extract(text):
     
     return response
     
+
+def pass_out_year_extract(lines):
+    
+    lines = education_text(lines)
+    pattern = r"\d{2,4}"  
+    for line in lines:
+        year = re.findall(pattern,line)
+        if len(year)>0:
+            break
+        
+    year = str(year[-1])    
+    current_date = date.today()
+    current_year = current_date.year
+    current_year = int(str(current_year)[2:])
+    
+    if len(year)==2:
+         if int(year)>current_year:
+             year = "19"+year
+         else:
+             year= "20"+year 
+             
+        
+    return year
+ 
     
     
-def education_extract(text):    
+      
+def education_text(lines):
+     
+    index=0
+    for line in lines:
+      if 'education' in line.lower():
+         index = lines.index(line)
+         break
+     
+    return lines[index:index+20]     
+        
+        
     
     
+def education_extract(lines):
+    
+    text =education_text(lines)
+
     model =pipeline("text2text-generation",model="google/flan-t5-large")
     
-    instruction="extract the bachelors or masters education details of the person"
+    instruction="extract the bachelors,masters,graduation education details of the person"
     
     input_text=f"{instruction}\n{text}"
 
     response=model(input_text,max_length=50,do_sample=False)
     
     response = response[0]['generated_text']
+    
+    
+    print(response)
+    
     
     return response    
   
@@ -110,7 +151,6 @@ def experience_extract(lines):
         if 'experience' in line.lower():
             exp = re.findall(pattern,line)
             if len(exp)>0:
-                print(exp)
                 return exp[0]
             
     
