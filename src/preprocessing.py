@@ -12,8 +12,7 @@ def words_tagging(words):
     
 
 
-
 def split_lines(text):
-    lines = text.split()
+    lines = text.splitlines()
     return lines
 
