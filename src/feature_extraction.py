@@ -77,7 +77,7 @@ def name_extract(text):
     
     model =pipeline("text2text-generation",model="google/flan-t5-large")
     
-    instruction="Extract the only full name of the person from the resume:"
+    instruction="Extract only full name of the person from the resume:"
     
     input_text=f"{instruction}\n{txt}"
 
@@ -146,12 +146,42 @@ def education_extract(lines):
 
 def degree_extraction(text):
     
-    degree_set = ['Masters',"Bachelor's",'BA','ARTS','B.Tech' ]
+    degree_set = ['Masters',"Master","Bachelor","Bachelors","BA","ARTS","MTech","BTech","Associate","BE" ]
+    degree_set_1 =['ma','ba','mt','bt','be','ar','m','b','p','g']
+    txt= text.split()
+    degree=""
     
-    # for word in text.split():
-    #     # print(word)
-    #     if word in degree_set:
-    #         # print("found",word)
+    for i, word in enumerate(txt):
+        txt[i] = re.sub(r'[^a-zA-Z0-9,]', '', word)
+        if txt[i]=='':
+            txt.remove(txt[i])
+        
+    
+    for word in txt:
+        
+        print((word[:2]).lower())
+        if (word[:2]).lower() in degree_set_1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           :
+            k=0
+            for d_word in txt[txt.index(word):]:
+                degree=degree+" "+d_word
+                if d_word[-1] ==',':
+                    k=k+1
+                print(k)    
+                if k==2:
+                    break
+               
+            if k==2:
+                break
+            
+              
+                  
+            
+    print(degree)
+    
+    return degree       
+            
+
+       
   
   
 

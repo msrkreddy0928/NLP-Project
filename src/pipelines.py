@@ -20,10 +20,12 @@ def pipeline(path):
          
    education = education_extract(lines)
    
-   degree_extraction(education)
+   degree= degree_extraction(education)
    
    passout = pass_out_year_extract(lines)
 
+   if degree=='':
+      degree=None
    
    if exp ==None:
       exp = "Experience not found"
@@ -37,12 +39,12 @@ def pipeline(path):
         
       
       
-   sno = insert(name,phone_num,passout,"Masters","college",exp)
+   # sno = insert(name,phone_num,passout,degree,"college",exp)
    
-   sno,name,phoneNo,passOutYear,degree,college,yearsOfExp = retrive(sno)
+   # sno,name,phoneNo,passOutYear,degree,college,yearsOfExp = retrive(sno)
 
    
-   return sno,name,phoneNo,passOutYear,degree,college,yearsOfExp
+   # return sno,name,phoneNo,passOutYear,degree,college,yearsOfExp
    
    
 
@@ -76,4 +78,4 @@ path12 = "/home/shiva/Downloads/resumes/Vienna-Modern-Resume-Template.pdf"
 
 
 if __name__== '__main__':
-   pipeline(path8)   
+   pipeline(path12)   
