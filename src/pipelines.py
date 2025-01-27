@@ -2,7 +2,7 @@ import pdf_text_extraction
 from pdf_text_extraction import extract_text_from_pdf
 from preprocessing import text_to_words,split_lines
 from feature_extraction import phone_num_extrcat,name_extract,experience_extract,education_extract,pass_out_year_extract,degree_extraction
-
+from mysqldb import insert,retrive
 
 def pipeline(path):
    
@@ -29,16 +29,20 @@ def pipeline(path):
       exp = "Experience not found"
       
     
-   
    print(name)
    print(phone_num)
    print(passout)
    print(education)
    print(exp)
+        
       
       
+   sno = insert(name,phone_num,passout,"Masters","college",exp)
    
-   return name,phone_num,exp,passout,education
+   sno,name,phoneNo,passOutYear,degree,college,yearsOfExp = retrive(sno)
+
+   
+   return sno,name,phoneNo,passOutYear,degree,college,yearsOfExp
    
    
 

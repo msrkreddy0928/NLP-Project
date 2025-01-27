@@ -52,14 +52,16 @@ def name_tagging(text):
             i=i+1
             
     
-    txt = (txt.lower()).split()
-    txt1 = (txt1.lower()).split()
+    txt = txt.split()
+    # txt1 = (txt1.lower()).split()
     # print(txt)
     # print(txt1)
   
                     
-    # for word1 in txt1:
-    #     txt = [word for word in txt if word != word1]
+    for word1 in txt:
+        if '@' in word1:
+            txt.remove(word1)
+            
         
     # str=""
     # for word in txt:
@@ -146,10 +148,10 @@ def degree_extraction(text):
     
     degree_set = ['Masters',"Bachelor's",'BA','ARTS','B.Tech' ]
     
-    for word in text.split():
-        print(word)
-        if word in degree_set:
-            print("found",word)
+    # for word in text.split():
+    #     # print(word)
+    #     if word in degree_set:
+    #         # print("found",word)
   
   
 

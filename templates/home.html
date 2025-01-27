@@ -5,6 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>File Upload Form</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        function saveData() {
+            const name = document.getElementById('nameOutput').value;
+            const phoneNumber = document.getElementById('phoneOutput').value;
+            const degree = document.getElementById('degreeOutput').value;
+            const passOutYear = document.getElementById('passOutOutput').value;
+            const college = document.getElementById('collegeOutput').value;
+            const experienceYears = document.getElementById('expyearsOutput').value;
+
+            fetch('/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: name,
+                    phoneNo: phoneNumber,
+                    degree:degree,
+                    passOutYear: passOutYear,
+                    college: college,
+                    expYears: experienceYears
+                })
+            }).then(response => {
+                if (response.ok) {
+                    alert('Data saved successfully!');
+                } else {
+                    alert('Error saving data.');
+                }
+            });
+        }
+        
+        function enableEditing() {
+            document.getElementById('nameOutput').disabled = false;
+            document.getElementById('phoneOutput').disabled = false;
+            document.getElementById('degreeOutput').disabled = false;
+            document.getElementById('passOutOutput').disabled = false;
+            document.getElementById('collegeOutput').disabled = false;
+            document.getElementById('expyearsOutput').disabled = false;
+        }
+    </script>
 </head>
 <body>
     <div class="form-container">
@@ -16,15 +56,41 @@
         </form>
 
         <div class="output" id="output">
-           
             <h3>Extracted Information:</h3>
-            <div id="nameOutput"><label for="nameOutput">Name:</label>{{nameOut}}</div>
-            <div id="phoneOutput"><label for="phoneOutput">Phone Number:</label>{{phonenumOut}}</div>
-            <div id="passoutOutput"><label for="passoutOutput">Pass Out Year:</label>{{passoutOut}}</div>
-            <div id="qualificationOutput"><label for="qualificationOutput">Qualification:</label>{{qualificationOut}}</div>
-            <div id="expyearsOutput"><label for="expyearsOutput">Years of Experience:</label>{{expyearsOut}}</div>
+            <div class = "form">
+                <label for="nameOutput">Name:</label>
+                <input type="text" id="nameOutput" value="{{nameOut}}" disabled />
+            </div>
 
+            <div class="form">
+                <label for="phoneOutput">Phone Number:</label>
+                <input type="text" id="phoneOutput" value="{{phonenumOut}}" disabled />
+            </div>
+
+            <div class="form">
+                <label for="degreeOutput">Degree:</label>
+                <input type="text" id="degreeOutput" value="{{degreeOut}}" disabled />
+            </div>
+
+            <div class="form">
+                <label for="passOutOutput">Pass Out Year:</label>
+                <input type="text" id="passOutOutput" value="{{passoutOut}}" disabled />
+            </div>
+
+            <div class="form">
+                <label for="collegeOutput">College:</label>
+                <input type="text" id="collegeOutput" value="{{collegeOut}}" disabled />
+            </div>
+
+            
+            <div class="form">
+                <label for="expyearsOutput">Years of Experience:</label>
+                <input type="text" id="expyearsOutput" value="{{expyearsOut}}" disabled />
+            </div>
         </div>
+      
+        <button id="modify-btn" type="button" onclick="enableEditing()">Modify</button>
+         <button id="save-btn"type="button" onclick="saveData()">Save</button>
     </div>
 </body>
 </html>
