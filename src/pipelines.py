@@ -1,7 +1,7 @@
 import pdf_text_extraction
 from pdf_text_extraction import extract_text_from_pdf
 from preprocessing import text_to_words,split_lines
-from feature_extraction import phone_num_extrcat,name_extract,experience_extract,education_extract,pass_out_year_extract,degree_extraction
+from feature_extraction import phone_num_extrcat,name_extract,experience_extract,education_extract,pass_out_year_extract,degree_extraction,college_extraction
 from mysqldb import insert,retrive
 
 def pipeline(path):
@@ -22,29 +22,36 @@ def pipeline(path):
    
    degree= degree_extraction(education)
    
+   college =college_extraction(lines)
+   
    passout = pass_out_year_extract(lines)
 
    if degree=='':
-      degree=None
+      degree="Degree not found"
    
    if exp ==None:
       exp = "Experience not found"
+      
+   if college =='':
+      college="College not found"   
       
     
    print(name)
    print(phone_num)
    print(passout)
-   print(education)
+   print(degree)
+   print(college)
    print(exp)
         
+    
+   dict = {"name":name,"phoneNo":phone_num,"degree":degree,"passout":passout,"college":college,"exp":exp}   
       
-      
-   # sno = insert(name,phone_num,passout,degree,"college",exp)
+   # sno = insert(name,phone_num,passout,degree,college,exp)
    
    # sno,name,phoneNo,passOutYear,degree,college,yearsOfExp = retrive(sno)
 
    
-   # return sno,name,phoneNo,passOutYear,degree,college,yearsOfExp
+   return name,phone_num,degree,passout,college,exp
    
    
 
@@ -77,5 +84,5 @@ path12 = "/home/shiva/Downloads/resumes/Vienna-Modern-Resume-Template.pdf"
 
 
 
-if __name__== '__main__':
-   pipeline(path12)   
+if __name__== '__main__':  
+   pipeline(path12)      

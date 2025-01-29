@@ -53,9 +53,6 @@ def name_tagging(text):
             
     
     txt = txt.split()
-    # txt1 = (txt1.lower()).split()
-    # print(txt)
-    # print(txt1)
   
                     
     for word1 in txt:
@@ -63,12 +60,11 @@ def name_tagging(text):
             txt.remove(word1)
             
         
-    # str=""
-    # for word in txt:
-    #     str=str+" "+word
-        
-    # print(str)       
-    return txt
+    str=""
+    for word in txt:
+        str=str+" "+word
+         
+    return str
     
     
 def name_extract(text):    
@@ -77,7 +73,7 @@ def name_extract(text):
     
     model =pipeline("text2text-generation",model="google/flan-t5-large")
     
-    instruction="Extract only full name of the person from the resume:"
+    instruction="Extract the only full name of the person from the resume:"
     
     input_text=f"{instruction}\n{txt}"
 
@@ -121,11 +117,9 @@ def education_text(lines):
       if ('Education' in line) or ('EDUCATION' in line):
          index = lines.index(line)
          break
-     
     return lines[index:index+20]     
         
         
-    
     
 def education_extract(lines):
     
@@ -133,13 +127,15 @@ def education_extract(lines):
 
     model =pipeline("text2text-generation",model="google/flan-t5-large")
     
-    instruction="extract the Education or EDUCATION details of the person from the resume"
+    instruction ="extract the Education or EDUCATION details of the person from the resume"
     
     input_text=f"{instruction}\n{text}"
 
     response=model(input_text,max_length=50,do_sample=False)
     
     response = response[0]['generated_text']
+    
+    print("education extraction",response)
 
     return response    
   
@@ -147,42 +143,88 @@ def education_extract(lines):
 def degree_extraction(text):
     
     degree_set = ['Masters',"Master","Bachelor","Bachelors","BA","ARTS","MTech","BTech","Associate","BE" ]
-    degree_set_1 =['ma','ba','mt','bt','be','ar','m','b','p','g']
+    # degree_set_pg = ['mas','mte','pos']
+    # degree_set_grad =['ba','bt','be','ar','b','gr']
+    
+    degree_set_pg =("m.","m.tech","mtech","master","masters","post","m.a")
+    degree_set_grad = ("bachelor","bachelors","arts","b.tech","btech","ba","be","b.","b.e","b.a")
+    
     txt= text.split()
     degree=""
     
     for i, word in enumerate(txt):
-        txt[i] = re.sub(r'[^a-zA-Z0-9,]', '', word)
+        txt[i] = re.sub('[^A-Za-z0-9,.]', '', word)
         if txt[i]=='':
             txt.remove(txt[i])
         
-    
+
     for word in txt:
-        
-        print((word[:2]).lower())
-        if (word[:2]).lower() in degree_set_1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           :
+        if (word.lower()).startswith (degree_set_pg)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           :
             k=0
             for d_word in txt[txt.index(word):]:
                 degree=degree+" "+d_word
                 if d_word[-1] ==',':
                     k=k+1
-                print(k)    
                 if k==2:
                     break
                
             if k==2:
                 break
             
+    if len(degree)>0:
+                
+        print(degree)
+        return degree
+    
+    else:
+        for word in txt:
+            if (word.lower()).startswith (degree_set_grad):
+                k=0
+                for d_word in txt[txt.index(word):]:
+                    degree=degree+" "+d_word
+                    if d_word[-1] ==',':
+                        k=k+1
+                        if k==2:
+                            break
+               
+                if k==2:
+                    break
+            
               
                   
-            
-    print(degree)
+    
     
     return degree       
             
 
        
-  
+def college_extraction(lines):
+    
+      text =education_text(lines)     
+      
+      model =pipeline("text2text-generation",model="google/flan-t5-large")
+      
+      instruction="extract the latest or first occurance of college or university names  in Education or EDUCATION section of the person from the resume"
+    
+      input_text=f"{instruction}\n{text[:20]}"
+
+      response=model(input_text,max_length=50,do_sample=False)
+    
+      response = response[0]['generated_text']
+      
+      k=0
+      for i, txt in enumerate(response):
+          if ',' in txt:
+              k=k+1
+          if k==2:
+              response = response[:i]
+              break    
+
+      
+      return response
+    
+    
+      
   
 
 

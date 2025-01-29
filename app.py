@@ -1,31 +1,53 @@
-from flask import Flask,render_template,request,json
+from flask import Flask,render_template,request,json,jsonify
 import pdfplumber
 import os
 import sys
 sys.path.append('/home/shiva/Desktop/ML/Files/NLP/src')
 from src.pipelines import pipeline
-from src.mysqldb import update
-
+from src.mysqldb import update,insert_all,retrive_all
+from flask_cors import CORS
 app = Flask(__name__)
 
-sno_=None
+
+CORS(app)
 
 
 @app.route("/")
 def home():
-    return render_template('home.html')
+    
+    return "HII"
+    # return render_template('home.html')
 
 
 @app.route("/extract",methods=['POST'])
 def feature_extraction():
     
     doc = request.files['file']
+   
     
-    sno,name,phoneNo,passOutYear,degree,college,yearsOfExp = pipeline(doc)
-    global sno_
-    sno_=sno
+    name,phoneNo,degree,passOutYear,college,yearsOfExp = pipeline(doc)
+ 
+    dict ={"name":name,"phoneNo":phoneNo,"passOutYear":passOutYear,"degree":degree,"college":college,"yearsOfExp":yearsOfExp}
     
-    return render_template('home.html',nameOut=name,phonenumOut=phoneNo,passoutOut=passOutYear,degreeOut=degree,collegeOut=college,expyearsOut=yearsOfExp)
+    return jsonify(dict), 200 
+    
+ 
+ 
+ 
+
+     
+@app.route("/values", methods=['POST'])
+def save_():
+    data= request.json
+    
+    print(data)
+
+
+    message = insert_all(data.get("name"),data.get("phoneNo"),data.get("email"),data.get("JobTitle"),data.get("currentOrganization"),data.get("exp"),data.get("degree"),data.get("passout"),data.get("college"))
+ 
+    
+    return jsonify(message) 
+ 
     
     
 @app.route("/save",methods=['POST'])
@@ -33,7 +55,7 @@ def save_modify_features():
     
     rows_aff = None
     data = request.get_json()
-   
+    sno_=0
     rows_aff=update(sno_,data)
     
     print(rows_aff)

@@ -3,6 +3,53 @@ from config import db_connection
 
 
 
+def insert_all(name,phoneNo,email,jobTitle,organization,expYears,degree,passOutYear,college):
+    
+    mydb = db_connection()
+    cursor = mydb.cursor()
+    
+    query1 = "select * from praser where phoneNo="+phoneNo
+    
+    cursor.execute(query1)
+    
+    data = cursor.fetchall()
+    
+    if len(data)>0:
+        return "Candidate already exist in the database"
+    
+    else:
+        query = "INSERT INTO praser(name,phoneNo,email,jobTitle,organization,expYears,degree,passOutYear,college) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+        values = (name,phoneNo,email,jobTitle,organization,expYears,degree,passOutYear,college)
+        cursor.execute(query,values)
+        mydb.commit()
+        
+        return "data saved successfully"
+    
+    
+def retrive_all(sno):  
+    mydb = db_connection()
+    cursor = mydb.cursor()
+    query = "select * from praser where sno="+str(sno)
+    cursor.execute(query)
+    feature_list = cursor.fetchall()
+
+    sno = feature_list[0][0]
+    name=feature_list[0][1]
+    phoneNo=feature_list[0][2]
+    email=feature_list[0][3]
+    jobTitle=feature_list[0][4]
+    organization=feature_list[0][5]
+    degree=feature_list[0][6]
+    yearsOfExp=feature_list[0][6]
+    passOutYear=feature_list[0][7]
+    college=feature_list[0][8]
+   
+    
+    return sno,name,phoneNo,email,jobTitle,organization,yearsOfExp,degree,passOutYear,college    
+
+
+
+
 def insert(name,phoneNo,passOutYear,degree,college,yearsOfExp):
     
     mydb = db_connection()
@@ -20,8 +67,7 @@ def insert(name,phoneNo,passOutYear,degree,college,yearsOfExp):
         return sno[0]
     else:
         return None
-  
-        
+      
     
 def retrive(sno):  
     mydb = db_connection()
