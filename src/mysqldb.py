@@ -8,9 +8,12 @@ def insert_all(name,phoneNo,email,jobTitle,organization,expYears,degree,passOutY
     mydb = db_connection()
     cursor = mydb.cursor()
     
-    query1 = "select * from praser where phoneNo="+phoneNo
+    query1 = "select * from parser where phoneNo=%s"
     
-    cursor.execute(query1)
+    values =(phoneNo,)
+
+    
+    cursor.execute(query1,values)
     
     data = cursor.fetchall()
     
@@ -18,20 +21,22 @@ def insert_all(name,phoneNo,email,jobTitle,organization,expYears,degree,passOutY
         return "Candidate already exist in the database"
     
     else:
-        query = "INSERT INTO praser(name,phoneNo,email,jobTitle,organization,expYears,degree,passOutYear,college) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+        query = "INSERT INTO parser(name,phoneNo,email,jobTitle,organization,expYears,degree,passOutYear,college) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"
         values = (name,phoneNo,email,jobTitle,organization,expYears,degree,passOutYear,college)
         cursor.execute(query,values)
         mydb.commit()
         
-        return "data saved successfully"
+        return "Data saved successfully"
     
     
-def retrive_all(sno):  
+def retrive_all(phoneNo):  
     mydb = db_connection()
     cursor = mydb.cursor()
-    query = "select * from praser where sno="+str(sno)
+    query = "select * from parser where phoneNo="+phoneNo
     cursor.execute(query)
     feature_list = cursor.fetchall()
+    
+    print(feature_list)
 
     sno = feature_list[0][0]
     name=feature_list[0][1]
@@ -39,13 +44,13 @@ def retrive_all(sno):
     email=feature_list[0][3]
     jobTitle=feature_list[0][4]
     organization=feature_list[0][5]
-    degree=feature_list[0][6]
     yearsOfExp=feature_list[0][6]
-    passOutYear=feature_list[0][7]
-    college=feature_list[0][8]
+    degree=feature_list[0][7]
+    passOutYear=feature_list[0][8]
+    college=feature_list[0][9]
    
     
-    return sno,name,phoneNo,email,jobTitle,organization,yearsOfExp,degree,passOutYear,college    
+    return name,phoneNo,email,jobTitle,organization,yearsOfExp,degree,passOutYear,college    
 
 
 

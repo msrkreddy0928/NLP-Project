@@ -37,16 +37,30 @@ def feature_extraction():
 
      
 @app.route("/values", methods=['POST'])
-def save_():
+def save_features():
     data= request.json
     
     print(data)
 
 
-    message = insert_all(data.get("name"),data.get("phoneNo"),data.get("email"),data.get("JobTitle"),data.get("currentOrganization"),data.get("exp"),data.get("degree"),data.get("passout"),data.get("college"))
+    message = insert_all(data.get("name"),data.get("phoneNo"),data.get("email"),data.get("jobTitle"),data.get("currentOrganization"),data.get("yearsOfExp"),data.get("degree"),data.get("passout"),data.get("college"))
  
+    dic ={"message":message}
+    return jsonify(dic  ) 
+
+
+
+
+@app.route("/getdata", methods=['POST'])
+def retrive_features():
+    data= request.json
     
-    return jsonify(message) 
+    name,phoneNo,email,jobTitle,organization,yearsOfExp,degree,passOutYear,college = retrive_all(data.get("phoneNo")) 
+
+
+    dict ={"name":name,"phoneNo":phoneNo,"email":email,"jobTitle":jobTitle,"oraganization":organization,"yearsOfExp":yearsOfExp,"degree":degree,"passOutYear":passOutYear,"college":college}
+    
+    return jsonify(dict)
  
     
     

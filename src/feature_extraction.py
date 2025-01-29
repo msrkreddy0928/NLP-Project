@@ -15,6 +15,10 @@ nltk.download('words')
 nlp = spacy.load("en_core_web_sm")
 
 
+ext_degree =""
+
+
+
 def phone_num_extrcat(text):
     pattern = r"\(?\+?\(?\d{1,3}\)?[-.\s]?\(?\d{1,4}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,4}"
     numbers = re.findall(pattern, text)
@@ -135,7 +139,6 @@ def education_extract(lines):
     
     response = response[0]['generated_text']
     
-    print("education extraction",response)
 
     return response    
   
@@ -143,9 +146,6 @@ def education_extract(lines):
 def degree_extraction(text):
     
     degree_set = ['Masters',"Master","Bachelor","Bachelors","BA","ARTS","MTech","BTech","Associate","BE" ]
-    # degree_set_pg = ['mas','mte','pos']
-    # degree_set_grad =['ba','bt','be','ar','b','gr']
-    
     degree_set_pg =("m.","m.tech","mtech","master","masters","post","m.a")
     degree_set_grad = ("bachelor","bachelors","arts","b.tech","btech","ba","be","b.","b.e","b.a")
     
@@ -157,42 +157,30 @@ def degree_extraction(text):
         if txt[i]=='':
             txt.remove(txt[i])
         
-
+    degree=""
     for word in txt:
         if (word.lower()).startswith (degree_set_pg)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           :
-            k=0
-            for d_word in txt[txt.index(word):]:
-                degree=degree+" "+d_word
-                if d_word[-1] ==',':
-                    k=k+1
-                if k==2:
-                    break
-               
-            if k==2:
-                break
+            degree=word
+            if word.lower() in ["m.","post"]:
+                degree=degree+" "+txt[txt.index(word)+1]
+            
             
     if len(degree)>0:
-                
-        print(degree)
         return degree
     
     else:
         for word in txt:
             if (word.lower()).startswith (degree_set_grad):
-                k=0
-                for d_word in txt[txt.index(word):]:
-                    degree=degree+" "+d_word
-                    if d_word[-1] ==',':
-                        k=k+1
-                        if k==2:
-                            break
-               
-                if k==2:
-                    break
+                degree=word
+                if word.lower() ==["b.","under"]:
+                    degree=degree+" "+txt[txt.index(word)+1]
+                
             
               
                   
+    global ext_degree
     
+    ext_degree=degree
     
     return degree       
             
@@ -212,22 +200,30 @@ def college_extraction(lines):
     
       response = response[0]['generated_text']
       
+      degree=""
+      if ext_degree=="":
+        degree =  degree_extraction(response)
+          
+      
+      txt =(response.lower()).split()
+      
+      if "college"  not in txt:
+          for word in txt:
+              if word in ["jntu"]:
+                  return word,degree
+          
+    
       k=0
       for i, txt in enumerate(response):
           if ',' in txt:
               k=k+1
-          if k==2:
+          if k==1:
               response = response[:i]
               break    
 
       
-      return response
+      return response,degree
     
-    
-      
-  
-
-
 
 
 def experience_extract(lines):
@@ -240,6 +236,69 @@ def experience_extract(lines):
                 return exp[0]
             
     
+def extract_summary(lines,name,phoneNo):
+    
+    start_index=-1
+    summary =""
+    
+    lines = lines[:30]
+    
+    words_to_search = [r"profile\s*:?",r"objective\s*:?",r"summary\s*:?",r"about\s*"]
+    
+    
+    for i,line in enumerate(lines):
+        for word in words_to_search:
+            match = re.findall(word,line.lower())
+            if len(match)>0:
+                start_index=i
+                break
+        if start_index>-1:
+            break
+    
+    # print(start_index)
+    break_list =[r"EXPERIENCE\s*:?",r"Experience\s*:?",r"HISTORY\s*:?",r"History\s*:?",r"Skills\s*:?",r"SKILLS\s*:?",r"Education\s*:?",r"EDUCATION\s*?"]
+
+        
+    if start_index>-1:
+        k=0
+        for line in lines[start_index:start_index+20]:
+            for word in break_list:
+                match= re.findall(word,line)
+                if len(match)>0:
+                    k+=1
+                    break    
+            if k>0:
+                break
+            else:
+                summary = summary+" "+line        
+
+    
+    if len(summary)>1:
+        summary = summary.split()
+        list1 = [phoneNo]
+        list1=list1+name.split()
+        for word in list1:
+            for txt in summary:
+                if word in txt or "@" in txt:
+                    summary.remove(txt)
+                    
+        summary = summary[1:]
+        
+        if summary[-1][-1]!=".":
+            summary.remove(summary[-1])
+        
+ 
+    str = ""
+    for word in summary:
+        str=str+" "+word
+        
+    
+    
+    return str            
+    
+               
+        
+        
+   
             
-            
-       
+   
