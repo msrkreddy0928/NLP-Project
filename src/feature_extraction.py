@@ -1,16 +1,7 @@
 import re
-import nltk
-from nltk import pos_tag,ne_chunk
-from nltk.tokenize import WhitespaceTokenizer
 import spacy
 from transformers import pipeline    
 from datetime import date
-
-
-nltk.download('punkt')          
-nltk.download('maxent_ne_chunker')
-nltk.download('maxent_ne_chunker_tab') 
-nltk.download('words')
 
 nlp = spacy.load("en_core_web_sm")
 
@@ -71,11 +62,9 @@ def name_tagging(text):
     return str
     
     
-def name_extract(text):    
+def name_extract(text,model):    
     
     txt = name_tagging(text)    
-    
-    model =pipeline("text2text-generation",model="google/flan-t5-large")
     
     instruction="Extract the only full name of the person from the resume:"
     
@@ -90,12 +79,19 @@ def name_extract(text):
 
 def pass_out_year_extract(lines):
     
+    # print(lines)
     lines = education_text(lines)
     pattern = r"\d{2,4}"  
     for line in lines:
         year = re.findall(pattern,line)
+        print(year)
         if len(year)>0:
             break
+     
+    # match = re.findall(pattern,lines)
+    
+    # print(match) 
+    # year =0
         
     year = str(year[-1])    
     current_date = date.today()
@@ -125,11 +121,9 @@ def education_text(lines):
         
         
     
-def education_extract(lines):
+def education_extract(lines,model):
     
     text =education_text(lines)
-
-    model =pipeline("text2text-generation",model="google/flan-t5-large")
     
     instruction ="extract the Education or EDUCATION details of the person from the resume"
     
@@ -139,18 +133,20 @@ def education_extract(lines):
     
     response = response[0]['generated_text']
     
+    print("edication extract",response)
+    
 
     return response    
   
 
 def degree_extraction(text):
-    
-    degree_set = ['Masters',"Master","Bachelor","Bachelors","BA","ARTS","MTech","BTech","Associate","BE" ]
+
     degree_set_pg =("m.","m.tech","mtech","master","masters","post","m.a")
     degree_set_grad = ("bachelor","bachelors","arts","b.tech","btech","ba","be","b.","b.e","b.a")
     
     txt= text.split()
     degree=""
+    dict1={"pg":None,"grad":None}
     
     for i, word in enumerate(txt):
         txt[i] = re.sub('[^A-Za-z0-9,.]', '', word)
@@ -159,71 +155,138 @@ def degree_extraction(text):
         
     degree=""
     for word in txt:
-        if (word.lower()).startswith (degree_set_pg)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           :
+        if (word.lower()).startswith (degree_set_pg):
             degree=word
             if word.lower() in ["m.","post"]:
                 degree=degree+" "+txt[txt.index(word)+1]
+         
             
             
-    if len(degree)>0:
-        return degree
+        if len(degree)>0:
+                dict1["pg"]=degree
+                break
+    #     # return degree
     
-    else:
-        for word in txt:
-            if (word.lower()).startswith (degree_set_grad):
-                degree=word
-                if word.lower() ==["b.","under"]:
-                    degree=degree+" "+txt[txt.index(word)+1]
-                
-            
+    degree=""
+    for word in txt:
+        if (word.lower()).startswith (degree_set_grad):
+            degree=word
+            if word.lower() in ["b.","under"]:
+                 degree=degree+" "+txt[txt.index(word)+1]
               
-                  
-    global ext_degree
+           
+        if len(degree)>0:
+            dict1["grad"]=degree
+            break
+     
+     
+    print("dict1",dict1) 
+             
+    # global ext_degree
     
-    ext_degree=degree
+    # ext_degree= dict1["pg"]
     
-    return degree       
-            
+    return dict1
+ 
+         
+
+def extract_degree2(lines,model):
+    
+    lines = education_text(lines)
+         
+    text = lines     
+    instruction= "Extract all the educational degrees mentioned in the education section from the provided text. Provide the degrees exactly as they appear."
+    # instruction = "extract the all educational degrees as it is from the education section "
+    
+    input_text = f"{instruction}\n{text[:15]}"
+
+    response = model(input_text,max_length=50,do_sample=False)
+    
+    response = response[0]['generated_text']     
+    
+    print(response)
+       
+    
+    return response
+
+
+
+
+
+
+
 
        
-def college_extraction(lines):
+def college_extraction(lines,model,degree1,degree2):
     
-      text =education_text(lines)     
+      lines =education_text(lines)     
+      college_list = ["college","university","technology","institute","school"]
       
-      model =pipeline("text2text-generation",model="google/flan-t5-large")
+      text=""
+      
+  
+      
       
       instruction="extract the latest or first occurance of college or university names  in Education or EDUCATION section of the person from the resume"
     
-      input_text=f"{instruction}\n{text[:20]}"
+      input_text=f"{instruction}\n{lines[:20]}"
 
       response=model(input_text,max_length=50,do_sample=False)
     
       response = response[0]['generated_text']
       
-      degree=""
-      if ext_degree=="":
-        degree =  degree_extraction(response)
-          
+      print("COLLEGE",response)
+      
+      degree=None
+      
+      if degree1 is None or degree2 is None:
+          degree = degree_extraction(response)
+             
       
       txt =(response.lower()).split()
-      
+ 
       if "college"  not in txt:
           for word in txt:
               if word in ["jntu"]:
                   return word,degree
           
     
-      k=0
-      for i, txt in enumerate(response):
-          if ',' in txt:
-              k=k+1
-          if k==1:
-              response = response[:i]
-              break    
+      index = response.find(",")
+      
+   
+      college1 = response
+      if index>-1:
+          college1 = response[:index]
+          
+      
+      college2 = response[index+1:]
+      print("college2",college2)    
+      
+    
+      college_list = ["college","university","technology","institute","school"]
+      
+      for word in college_list:
+          index = (college1.lower()).find(word)
+          if index>-1:
+              college1 = college1[:index+len(word)]
+              break
+          
+      for word in college_list:
+          index = (college2.lower()).find(word)
+          if index>-1:
+              index_1 = college2[:index+len(word)].find(',')
+              college2 = college2[index_1+1:index+len(word)]
+              break
+      
+      
+      print(college2)       
+              
+            
 
       
-      return response,degree
+      return college1,college2,degree
     
+
 
 
 def experience_extract(lines):
@@ -235,6 +298,8 @@ def experience_extract(lines):
             if len(exp)>0:
                 return exp[0]
             
+            
+
     
 def extract_summary(lines,name,phoneNo):
     

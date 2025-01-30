@@ -3,7 +3,7 @@ import pdfplumber
 import os
 import sys
 sys.path.append('/home/shiva/Desktop/ML/Files/NLP/src')
-from src.pipelines import pipeline
+from src.pipelines import pipeline_start
 from src.mysqldb import update,insert_all,retrive_all
 from flask_cors import CORS
 app = Flask(__name__)
@@ -25,9 +25,14 @@ def feature_extraction():
     doc = request.files['file']
    
     
-    name,phoneNo,degree,passOutYear,college,yearsOfExp = pipeline(doc)
+    name,phoneNo,degree1,degree2,passOutYear,college1,college2,yearsOfExp,summary = pipeline_start(doc)
+    
+    passOutYear2=None
+    percentage=None
+    
+    deg_list = {"degre2":degree2,"college2":college2,"passOutYear":passOutYear2,"percentage":percentage}
  
-    dict ={"name":name,"phoneNo":phoneNo,"passOutYear":passOutYear,"degree":degree,"college":college,"yearsOfExp":yearsOfExp}
+    dict ={"name":name,"phoneNo":phoneNo,"passOutYear":passOutYear,"degree1":degree1,"degree2":deg_list,"college":college1,"yearsOfExp":yearsOfExp,"summary":summary}
     
     return jsonify(dict), 200 
     
