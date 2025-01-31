@@ -32,9 +32,13 @@ def insert_all(name,phoneNo,email,jobTitle,organization,expYears,degree,passOutY
 def retrive_all(phoneNo):  
     mydb = db_connection()
     cursor = mydb.cursor()
-    query = "select * from parser where phoneNo="+phoneNo
-    cursor.execute(query)
+    query = "select * from parser where phoneNo=%s"
+    values =(phoneNo,)
+    cursor.execute(query,values)
     feature_list = cursor.fetchall()
+    # if len(feature_list)==0:
+    #     return "candidate not found"
+    
     
     print(feature_list)
 

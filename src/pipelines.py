@@ -1,16 +1,35 @@
 import pdf_text_extraction
-from pdf_text_extraction import extract_text_from_pdf
-from preprocessing import text_to_words,split_lines
-from feature_extraction import phone_num_extrcat,name_extract,experience_extract,education_extract,pass_out_year_extract,degree_extraction,college_extraction,extract_summary,extract_degree2
+from pdf_text_extraction import extract_text_from_pdf,extract_text
+from preprocessing import text_to_words,split_lines,line_remover
+from feature_extraction import phone_num_extrcat,name_extract,experience_extract,education_extract,pass_out_year_extract,degree_extraction,college_extraction,extract_summary,extract_degree2,extract_passout,education_text
 from mysqldb import insert,retrive
 from transformers import pipeline    
 
 
 def pipeline_start(path):
    
-   
+
    model =pipeline("text2text-generation",model="google/flan-t5-large")
    
+   text,text_list  = extract_text(path)
+   
+   text_list = line_remover(text_list)
+   
+   # lines = text.splitlines()
+
+   education_lines = education_text(text_list)
+   print("Edu",education_lines[:7])
+   
+   degrees = extract_degree2(education_lines[:7],model)
+   str=""
+   for line in education_lines[:7]:
+      str=str+""+line
+      
+      
+   
+   college1,college2,degree = college_extraction(str,model,"mtech","btech")
+   
+   print(college1,college2)
    
    text = extract_text_from_pdf(path)
 
@@ -18,14 +37,26 @@ def pipeline_start(path):
    
    lines = split_lines(text)
    
-   phone_num =  phone_num_extrcat(text)      
-  
-   
    name = name_extract(text,model)
+   
+   phone_num =  phone_num_extrcat(text)
    
    exp=experience_extract(lines)
    
-   degrees = extract_degree2(lines,model)
+
+   
+   # index =-1
+   
+   # index = text.find("EDUCATION") 
+   
+   # if index>-1:
+   #    degrees = extract_degree2(text[index:],model)
+   # else:
+   #    index1 =text.find("EDUCATION")
+   #    degrees = extract_degree2(text[index1:],model)
+              
+  
+
          
    education = education_extract(lines,model)
    
@@ -52,6 +83,7 @@ def pipeline_start(path):
       
       
    college1,college2,degree_ =college_extraction(lines,model,degree1,degree2)
+    
    
    if degree1 is None:
       degree1=degree_["pg"]
@@ -63,7 +95,7 @@ def pipeline_start(path):
    
    summary=extract_summary(lines,name,phone_num)
 
-   
+   extract_passout(degrees,degree1,degree2)
    
    if exp ==None:
       exp = "Experience not found"
@@ -126,7 +158,5 @@ path12 = "/home/shiva/Downloads/resumes/Vienna-Modern-Resume-Template.pdf"
 
 path13 = "/home/shiva/Downloads/resumes/New-York-Resume-Template-Creative.pdf"
 
-
-
 if __name__== '__main__':  
-   pipeline_start(path2)      
+   pipeline_start(path6)

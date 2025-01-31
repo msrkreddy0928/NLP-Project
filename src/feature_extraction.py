@@ -79,20 +79,14 @@ def name_extract(text,model):
 
 def pass_out_year_extract(lines):
     
-    # print(lines)
+
     lines = education_text(lines)
-    pattern = r"\d{2,4}"  
+    pattern = r"-?\d{2,4}-?"  
     for line in lines:
         year = re.findall(pattern,line)
-        print(year)
         if len(year)>0:
             break
      
-    # match = re.findall(pattern,lines)
-    
-    # print(match) 
-    # year =0
-        
     year = str(year[-1])    
     current_date = date.today()
     current_year = current_date.year
@@ -102,7 +96,7 @@ def pass_out_year_extract(lines):
          if int(year)>current_year:
              year = "19"+year
          else:
-             year= "20"+year 
+             year= "20"+year  
              
         
     return year
@@ -117,6 +111,8 @@ def education_text(lines):
       if ('Education' in line) or ('EDUCATION' in line):
          index = lines.index(line)
          break
+     
+     
     return lines[index:index+20]     
         
         
@@ -124,6 +120,8 @@ def education_text(lines):
 def education_extract(lines,model):
     
     text =education_text(lines)
+    
+    #"extract the Education or EDUCATION details of the person from the resume"
     
     instruction ="extract the Education or EDUCATION details of the person from the resume"
     
@@ -192,26 +190,69 @@ def degree_extraction(text):
 
 def extract_degree2(lines,model):
     
-    lines = education_text(lines)
+    # lines = education_text(lines)
          
     text = lines     
-    instruction= "Extract all the educational degrees mentioned in the education section from the provided text. Provide the degrees exactly as they appear."
-    # instruction = "extract the all educational degrees as it is from the education section "
+    instruction = "Extract all the educational degrees mentioned in the education section from the provided text. Provide the degrees exactly as they appear."
+    instruction= "Extract all the  educational degrees with colleges ears and percenatges under education section as it is from the resume "
+  
     
-    input_text = f"{instruction}\n{text[:15]}"
+    input_text = f"{instruction}\n{text}"
 
     response = model(input_text,max_length=50,do_sample=False)
     
     response = response[0]['generated_text']     
     
-    print(response)
+    print("educationresponse",response)
        
     
     return response
 
 
 
-
+def  extract_passout(lines,degree1,degree2):
+    
+    index=-1
+    
+    if degree1 is not None:
+        index = lines.find(degree1)
+        if index>-1:
+            lines1=lines[index:]
+            lines1=lines1.split()
+            txt=""
+            for i,line in enumerate(lines1[1:]):
+                txt=txt+" "+line
+                if i==4:
+                    break
+                
+            pattern = r"\d{4}"      
+    
+            match = re.findall(pattern,txt)
+    
+            print("match1",match)
+    
+    if degree2 is not None:
+         index = lines.find(degree2)
+         if index>-1:
+            lines2=lines[index:]
+            lines2=lines2.split()
+            txt=""
+            for i,line in enumerate(lines2[1:]):
+                txt=txt+" "+line
+                if i==4:
+                    break
+                
+            pattern = r"\d{4}"      
+    
+            match = re.findall(pattern,txt)
+    
+            print("match2",match)
+             
+    
+    
+    return
+        
+    
 
 
 
@@ -222,16 +263,12 @@ def college_extraction(lines,model,degree1,degree2):
       lines =education_text(lines)     
       college_list = ["college","university","technology","institute","school"]
       
-      text=""
-      
-  
-      
-      
       instruction="extract the latest or first occurance of college or university names  in Education or EDUCATION section of the person from the resume"
+      instruction = "extract all the college names with college or university from the text"
     
       input_text=f"{instruction}\n{lines[:20]}"
 
-      response=model(input_text,max_length=50,do_sample=False)
+      response=model(input_text,max_length=80,do_sample=False)
     
       response = response[0]['generated_text']
       
@@ -244,11 +281,6 @@ def college_extraction(lines,model,degree1,degree2):
              
       
       txt =(response.lower()).split()
- 
-      if "college"  not in txt:
-          for word in txt:
-              if word in ["jntu"]:
-                  return word,degree
           
     
       index = response.find(",")
@@ -276,12 +308,8 @@ def college_extraction(lines,model,degree1,degree2):
           if index>-1:
               index_1 = college2[:index+len(word)].find(',')
               college2 = college2[index_1+1:index+len(word)]
-              break
-      
-      
-      print(college2)       
-              
-            
+              break 
+         
 
       
       return college1,college2,degree

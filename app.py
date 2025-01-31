@@ -27,8 +27,8 @@ def feature_extraction():
     
     name,phoneNo,degree1,degree2,passOutYear,college1,college2,yearsOfExp,summary = pipeline_start(doc)
     
-    passOutYear2=None
-    percentage=None
+    passOutYear2 = None
+    percentage = None
     
     deg_list = {"degre2":degree2,"college2":college2,"passOutYear":passOutYear2,"percentage":percentage}
  
@@ -60,9 +60,11 @@ def save_features():
 def retrive_features():
     data= request.json
     
+    print(data.get("phoneNo"))
+    
     name,phoneNo,email,jobTitle,organization,yearsOfExp,degree,passOutYear,college = retrive_all(data.get("phoneNo")) 
-
-
+    
+    
     dict ={"name":name,"phoneNo":phoneNo,"email":email,"jobTitle":jobTitle,"oraganization":organization,"yearsOfExp":yearsOfExp,"degree":degree,"passOutYear":passOutYear,"college":college}
     
     return jsonify(dict)
