@@ -1,6 +1,12 @@
 from nltk import word_tokenize,pos_tag,ne_chunk
+import nltk
 import spacy
 import re
+
+
+nltk.download('punkt')
+nltk.download('punkt_tab')
+
 
 def text_to_words(text):
     words=word_tokenize(text)

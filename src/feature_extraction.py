@@ -3,7 +3,7 @@ import spacy
 from transformers import pipeline    
 from datetime import date
 
-nlp = spacy.load("en_core_web_sm")
+
 
 
 ext_degree =""
@@ -26,6 +26,7 @@ def phone_num_extrcat(text):
     
     
 def name_tagging(text):
+    nlp = spacy.load("en_core_web_sm")
     doc = nlp(text)
     txt="" 
     i=1  
@@ -131,7 +132,7 @@ def education_extract(lines,model):
     
     response = response[0]['generated_text']
     
-    print("edication extract",response)
+    print("education extract",response)
     
 
     return response    
@@ -143,6 +144,7 @@ def degree_extraction(text):
     degree_set_grad = ("bachelor","bachelors","arts","b.tech","btech","ba","be","b.","b.e","b.a")
     
     txt= text.split()
+    print(txt)
     degree=""
     dict1={"pg":None,"grad":None}
     
@@ -186,7 +188,58 @@ def degree_extraction(text):
     
     return dict1
  
+def degree_extraction_1(text):
+
+    degree_set_pg =("m.","m.tech","mtech","master","masters","post","m.a")
+    degree_set_grad = ("bachelor","bachelors","arts","b.tech","btech","ba","be","b.","b.e","b.a")
+      
+    txt= text.split(",")
+    degree=""
+    dict1={"pg":None,"grad":None}
+    
+    for i, word in enumerate(txt):
+        txt[i] = re.sub('[^A-Za-z0-9,." "]', '', word)
+        if txt[i]=='':
+            txt.remove(txt[i])
+        
+    degree=""
+    for word in txt:
+            for degree in degree_set_pg:
+                if word.lower().startswith(degree):
+                    degree=word
+                    break
+            
          
+            if len(degree)>0:
+                dict1["pg"]=degree
+                break
+    #     # return degree
+    
+    degree=""
+    for word in txt:
+        if (word.lower()).startswith (degree_set_grad):
+            degree=word
+            
+              
+           
+        if len(degree)>0:
+            dict1["grad"]=degree
+            break
+     
+     
+    print("dict1",dict1) 
+             
+    # global ext_degree
+    
+    # ext_degree= dict1["pg"]
+    
+    return dict1
+
+
+
+
+
+
 
 def extract_degree2(lines,model):
     
@@ -194,16 +247,18 @@ def extract_degree2(lines,model):
          
     text = lines     
     instruction = "Extract all the educational degrees mentioned in the education section from the provided text. Provide the degrees exactly as they appear."
-    instruction= "Extract all the  educational degrees with colleges ears and percenatges under education section as it is from the resume "
-  
+    instruction= "Extract all the  educational degrees with colleges years and percenatges under education section as it is from the resume "
+    # instruction = "extract degree,college name,pass out year,percentage or cgpa in the form of dictionary (college,name,pass out year,cgpa)as key values  from education section"
     
     input_text = f"{instruction}\n{text}"
 
-    response = model(input_text,max_length=50,do_sample=False)
+    response = model(input_text,max_length=100,do_sample=False)
+
+    print("educationresponse",response)
     
     response = response[0]['generated_text']     
     
-    print("educationresponse",response)
+   
        
     
     return response
@@ -254,10 +309,79 @@ def  extract_passout(lines,degree1,degree2):
         
     
 
+def extract_college(text,degree1,degree2):
+    pattern = r"-?\d{2,4}-?" 
+
+     
+    pass_out_year_1=None
+    pass_out_year_2=None
+    text_college_1=None
+    text_college_2=None
+
+    if degree1 is not None:
+        degree1 = degree1.split()
+        degree1=degree1[0]
+        index = text.find(degree1)
+        print(index)
+        if degree2 is not None:
+            degree2 = degree2.split()
+            degree2 = degree2[0]
+            index_1 = text.find(degree2)
+            print(index_1)
+            text_college_1 = text[index:index_1]
+            text_college_2 = text[index_1:]
+        else:
+            text_college_1= text[index:]
+
+    elif degree2 is not None:
+        degree2 = degree2.split()
+        degree2 = degree2[0]
+        index_1 = text.find(degree2)
+        text_college_2 = text[index_1:]
+    
+
+    
+    college_list = ["college","university","technology","institute","school"]
+
+    if text_college_1 is not None:
+        pass_out_year_1 = re.findall(pattern,text_college_1)
+        index_college_1 = text_college_1.find(",")
+        for word in college_list:
+            index = (text_college_1.lower()).find(word)
+            if index>-1:
+                text_college_1 = text_college_1[index_college_1+1:index+len(word)]
+                break
+                
+    if text_college_2 is not None:
+        pass_out_year_2 = re.findall(pattern,text_college_2)
+        index_college_2 = text_college_2.find(",")
+        for word in college_list:
+            index = (text_college_2.lower()).find(word)
+            if index>-1:
+                text_college_2 = text_college_2[index_college_2+1:index+len(word)]
+                break
+    
+    if pass_out_year_1 is not None:
+        if len(pass_out_year_1)==1:
+            pass_out_year_1=pass_out_year_1[0]
+        elif len(pass_out_year_1)==2:
+           pass_out_year_1= pass_out_year_1[1]
+
+    if pass_out_year_2  is not None:
+        if len(pass_out_year_2)==1:
+            pass_out_year_2=pass_out_year_2[0]
+        elif len(pass_out_year_2)==2:
+           pass_out_year_2 = pass_out_year_2[1]
+
+    
+
+    return text_college_1,text_college_2,pass_out_year_1,pass_out_year_2
 
 
 
-       
+
+
+
 def college_extraction(lines,model,degree1,degree2):
     
       lines =education_text(lines)     

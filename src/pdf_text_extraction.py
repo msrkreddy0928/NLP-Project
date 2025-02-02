@@ -11,11 +11,11 @@ def extract_text_from_pdf(path):
     return extracted_text        
             
             
-path4 = "/home/shiva/Downloads/resumes/Dhananjay Kumar Yadav.pdf" 
-#path9 = "/home/shiva/Downloads/resumes/Kashetti_Venu.pdf"
-path3 = "/home/shiva/Downloads/resumes/Azhar khan.pdf"
+# path4 = "/home/shiva/Downloads/resumes/Dhananjay Kumar Yadav.pdf" 
+# #path9 = "/home/shiva/Downloads/resumes/Kashetti_Venu.pdf"
+# path3 = "/home/shiva/Downloads/resumes/Azhar khan.pdf"
 
-path10 = "/home/shiva/Downloads/resumes/Dublin-Resume-Template-Modern.pdf"         
+# path10 = "/home/shiva/Downloads/resumes/Dublin-Resume-Template-Modern.pdf"         
 
 def extract_text(path):
     
@@ -63,9 +63,9 @@ def extract_text(path):
 
 
 # print(extract_text)
-path6 = "/home/shiva/Downloads/resumes/Nanneboina Ramana.pdf"
-
-extract_text(path6)
+# path6 = "/home/shiva/Downloads/resumes/Nanneboina Ramana.pdf"
+path6 = "\\Users\\Shiva Reddy\\Downloads\\resumes\\Nanneboina Ramana.pdf"
+# extract_text(path6)
 
 # extract_text =""
 # doc = fitz.open(path3)
