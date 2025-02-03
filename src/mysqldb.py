@@ -3,7 +3,7 @@ from config import db_connection
 
 
 
-def insert_all(name,phoneNo,email,jobTitle,organization,expYears,degree,passOutYear,college):
+def insert_all(name,phoneNo,countryCode,email,jobTitle,organization,expYears,degree1,degree2,passOutYear1,passOutYear2,college1,college2,summary,percentage1,percentage2,pl,fs,bs,ds,os):
     
     mydb = db_connection()
     cursor = mydb.cursor()
@@ -21,8 +21,8 @@ def insert_all(name,phoneNo,email,jobTitle,organization,expYears,degree,passOutY
         return "Candidate already exist in the database"
     
     else:
-        query = "INSERT INTO parser(name,phoneNo,email,jobTitle,organization,expYears,degree,passOutYear,college) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-        values = (name,phoneNo,email,jobTitle,organization,expYears,degree,passOutYear,college)
+        query = "INSERT INTO parser(name,phoneNo,countryCode,email,jobTitle,organization,expYears,degree1,degree2,passOutYear1,passOutYear2,college1,college2,summary,percentage1,percentage2,pl,fs,bs,ds,os) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+        values = (name,phoneNo,countryCode,email,jobTitle,organization,expYears,degree1,degree2,passOutYear1,passOutYear2,college1,college2,summary,percentage1,percentage2,pl,fs,bs,ds,os)
         cursor.execute(query,values)
         mydb.commit()
         
@@ -42,19 +42,29 @@ def retrive_all(phoneNo):
     
     print(feature_list)
 
-    sno = feature_list[0][0]
+    # sno = feature_list[0][0]
     name=feature_list[0][1]
     phoneNo=feature_list[0][2]
     email=feature_list[0][3]
     jobTitle=feature_list[0][4]
     organization=feature_list[0][5]
     yearsOfExp=feature_list[0][6]
-    degree=feature_list[0][7]
-    passOutYear=feature_list[0][8]
-    college=feature_list[0][9]
-   
-    
-    return name,phoneNo,email,jobTitle,organization,yearsOfExp,degree,passOutYear,college    
+    degree1=feature_list[0][7]
+    passOutYear1 = feature_list[0][8]
+    college1 = feature_list[0][9]
+    degree2 = feature_list[0][10]
+    college2 = feature_list[0][11]
+    passOutYear2=feature_list[0][12]
+    countryCode = feature_list[0][13]
+    summary=feature_list[0][14]
+    percenatge1=feature_list[0][15]
+    percenatge2 =feature_list[0][16]
+    pl=feature_list[0][17]
+    fs=feature_list[0][18]
+    bs=feature_list[0][19]
+    ds=feature_list[0][20]
+    os= feature_list[0][21]
+    return name,phoneNo,countryCode,email,jobTitle,organization,yearsOfExp,degree1,degree2,college1,college2,passOutYear1,passOutYear2,summary,percenatge1,percenatge2,pl,fs,bs,ds,os
 
 
 

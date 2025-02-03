@@ -25,14 +25,22 @@ def feature_extraction():
     doc = request.files['file']
    
     
-    name,phoneNo,degree1,degree2,passOutYear,college1,college2,yearsOfExp,summary = pipeline_start(doc)
+    name,phoneNo,countryCode,degree1,degree2,passOutYear1,passOutYear2,college1,college2,yearsOfExp,summary = pipeline_start(doc)
     
-    passOutYear2 = None
-    percentage = None
+    if degree1 is None:
+        degree1=degree2
+        passOutYear1=passOutYear2
+        college1=college2
+        degree2=None
+        passOutYear2=None
+        college2=None 
+     
+    percentage1=None
+    percentage2 = None
     
-    deg_list = {"degre2":degree2,"college2":college2,"passOutYear":passOutYear2,"percentage":percentage}
+    deg_list = {"degree2":degree2,"college2":college2,"passOutYear2":passOutYear2,"percentage2":percentage2}
  
-    dict ={"name":name,"phoneNo":phoneNo,"passOutYear":passOutYear,"degree1":degree1,"degree2":deg_list,"college":college1,"yearsOfExp":yearsOfExp,"summary":summary}
+    dict ={"name":name,"phoneNo":phoneNo,"countryCode":countryCode,"degree":degree1,"deg2list":deg_list,"passOutYear1":passOutYear1,"college":college1,"yearsOfExp":yearsOfExp,"pecentage1":percentage1,"summary":summary}
     
     return jsonify(dict), 200 
     
@@ -48,7 +56,7 @@ def save_features():
     print(data)
 
 
-    message = insert_all(data.get("name"),data.get("phoneNo"),data.get("email"),data.get("jobTitle"),data.get("currentOrganization"),data.get("yearsOfExp"),data.get("degree"),data.get("passout"),data.get("college"))
+    message = insert_all(data.get("name"),data.get("phoneNo"),data.get("countryCode"),data.get("email"),data.get("jobTitle"),data.get("organization"),data.get("yearsOfExp"),data.get("degree1"),data.get("degree2"),data.get("passOutYear1"),data.get("passOutYear2"),data.get("college1"),data.get("College2"),data.get("summary"),data.get("percentage1"),data.get("percenatge2"),data.get("pl"),data.get("fs"),data.get("bs"),data.get("ds"),data.get("os"))
  
     dic ={"message":message}
     return jsonify(dic  ) 
@@ -62,15 +70,15 @@ def retrive_features():
     
     print(data.get("phoneNo"))
     
-    name,phoneNo,email,jobTitle,organization,yearsOfExp,degree,passOutYear,college = retrive_all(data.get("phoneNo")) 
+    name,phoneNo,countryCode,email,jobTitle,organization,yearsOfExp,degree1,degree2,college1,college2,passOutYear1,passOutYear2,summary,percenatge1,percentage2,pl,fs,bs,ds,os= retrive_all(data.get("phoneNo")) 
+    print("org",organization)
     
-    
-    dict ={"name":name,"phoneNo":phoneNo,"email":email,"jobTitle":jobTitle,"oraganization":organization,"yearsOfExp":yearsOfExp,"degree":degree,"passOutYear":passOutYear,"college":college}
+    dict ={"name":name,"phoneNo":phoneNo,"countryCode":countryCode,"email":email,"jobTitle":jobTitle,"oraganization":organization,"yearsOfExp":yearsOfExp,"degree1":degree1,"degree2":degree2,"college1":college1,"college2":college2,"passOutYear1":passOutYear1,"passOutYear2":passOutYear2,"summary":summary,"percentage1":percenatge1,"percentage2":percentage2,"pl":pl,"fs":fs,"bs":bs,"ds":ds,"os":os}
     
     return jsonify(dict)
- 
+
     
-    
+
 @app.route("/save",methods=['POST'])
 def save_modify_features():
     

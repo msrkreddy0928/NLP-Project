@@ -1,6 +1,7 @@
 import pdfplumber
 import pymupdf
-import fitz  
+import fitz
+import io  
 
 def extract_text_from_pdf(path):
     with pdfplumber.open(path) as pf:
@@ -15,14 +16,21 @@ def extract_text_from_pdf(path):
 # #path9 = "/home/shiva/Downloads/resumes/Kashetti_Venu.pdf"
 # path3 = "/home/shiva/Downloads/resumes/Azhar khan.pdf"
 
-# path10 = "/home/shiva/Downloads/resumes/Dublin-Resume-Template-Modern.pdf"         
+# path10 = "/home/shiva/Downloads/resumes/Dublin-Resume-Template-Modern.pdf"    
 
+     
+path3 = "/home/shiva/Downloads/resumes/Abhishek Gunda.pdf"
 def extract_text(path):
     
     extracted_text =""
     extract_text_list = []
     
-    doc = fitz.open(path)
+ 
+    if isinstance(path, str):  
+        doc = fitz.open(path)
+    else:
+        file_stream = io.BytesIO(path.read())  
+        doc = fitz.open(stream=file_stream, filetype="pdf")
     
     for page_num in range(len(doc)):
         
@@ -41,49 +49,9 @@ def extract_text(path):
     return extracted_text,extract_text_list
 
 
-# def extract_text(path):
-#     extracted_text = ""
-#     doc = fitz.open(path)
 
-#     for page_num in range(len(doc)):
-#         page = doc.load_page(page_num)
-#         text = page.get_text("text")
-#         # print(text)
-        
-#         # Extract all text at once
-
-#         extracted_text += text
-
-#     return extracted_text
+extract_text(path3)
 
 
 
 
-
-
-
-# print(extract_text)
-# path6 = "/home/shiva/Downloads/resumes/Nanneboina Ramana.pdf"
-path6 = "\\Users\\Shiva Reddy\\Downloads\\resumes\\Nanneboina Ramana.pdf"
-# extract_text(path6)
-
-# extract_text =""
-# doc = fitz.open(path3)
-
-# for page_num in range(len(doc)):
-
-#     page = doc.load_page(page_num)
-    
-#     text_dict = page.get_text("dict")
-    
-#     for block in text_dict["blocks"]:
-#         if block["type"] == 0: 
-#             # print("Block bbox:", block["bbox"]) 
-#             for line in block["lines"]:
-#                 for span in line["spans"]:
-#                     print("Text:", span["text"])  
-                    
-                     
-                     
-                    
-#                     print("Position (bbox):", span["bbox"])  
