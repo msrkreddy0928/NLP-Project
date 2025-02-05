@@ -64,6 +64,8 @@ def retrive_all(phoneNo):
     bs=feature_list[0][19]
     ds=feature_list[0][20]
     os= feature_list[0][21]
+    
+    
     return name,phoneNo,countryCode,email,jobTitle,organization,yearsOfExp,degree1,degree2,college1,college2,passOutYear1,passOutYear2,summary,percenatge1,percenatge2,pl,fs,bs,ds,os
 
 

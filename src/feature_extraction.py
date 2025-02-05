@@ -120,10 +120,10 @@ def pass_out_year_extract(lines):
     
       
 def extract_education_text(lines):
-     
     index=0
     for line in lines:
-      if ('Education' in line) or ('EDUCATION' in line):
+        # print("line ",line)
+        if ('Education' in line) or ('EDUCATION' in line) or ('QUALIFICATION' in line):
          index = lines.index(line)
          break
      
@@ -230,8 +230,10 @@ def extract_degree_1(text):
     
     degree_set_pg =("m.","m.tech","mtech","master","masters","post","m.a")
     degree_set_grad = ("bachelor","bachelors","arts","associate","b.tech","btech","ba","be","b.","b.e","b.a")
-      
+    
     txt= text.split(",")
+    
+    print("txt",txt)
     degree=""
     dict1={"pg":None,"grad":None}
     
@@ -245,7 +247,6 @@ def extract_degree_1(text):
             for deg in degree_set_pg:
                 word = word.lstrip()
                 if word.lower().startswith(deg):
-                    print("deg",deg)
                     degree=word
                     break
             
@@ -326,6 +327,10 @@ def extract_passout_1(text,degree1,degree2):
     pass_out_year_2=None
     text_college_1=None
     text_college_2=None
+     
+    ind = text.lower().find('experience')
+    if ind>-1:
+        text=text[:ind]
 
     if degree1 is not None:
         
@@ -595,7 +600,7 @@ def extract_summary_1(text):
         if start_index>-1:
             break
         
-    break_list =[r"EXPERIENCE\s*:?",r"Experience\s*:?",r"HISTORY\s*:?",r"History\s*:?",r"Skills\s*:?",r"SKILLS\s*:?",r"Education\s*:?",r"EDUCATION\s*?"]
+    break_list = [r"\bEXPERIENCE\b\s*:?", r"\bExperience\b\s*:?", r"\bHISTORY\b\s*:?",  r"\bHistory\b\s*:?", r"\bSkills\b\s*:?", r"\bSKILLS\b\s*:?",  r"\bEducation\b\s*:?", r"\bEDUCATION\b\s*?"]
 
         
     if start_index>-1:
@@ -616,13 +621,14 @@ def extract_summary_1(text):
     
     summary1 = summary.split()
     
-    words_to_search = ["profile","objective","summary","about" "me"]                   
+    words_to_search = ["profile","profile:","professional","objective","objective:","career","career:","summary","summary:","about" "me","me:"]                   
     
     
     for wd in summary1[:4]:
         for word in words_to_search:
             if wd.lower() == word:
-                summary1.remove(wd) 
+                summary1.remove(wd)
+                break 
     
     
     summary = ' '.join(summary1)    
@@ -655,7 +661,7 @@ def extract_summary(lines,name,phoneNo):
             break
     
 
-    break_list =[r"EXPERIENCE\s*:?",r"Experience\s*:?",r"HISTORY\s*:?",r"History\s*:?",r"Skills\s*:?",r"SKILLS\s*:?",r"Education\s*:?",r"EDUCATION\s*?"]
+    break_list = [r"\bEXPERIENCE\b\s*:?", r"\bExperience\b\s*:?", r"\bHISTORY\b\s*:?",  r"\bHistory\b\s*:?", r"\bSkills\b\s*:?", r"\bSKILLS\b\s*:?",  r"\bEducation\b\s*:?", r"\bEDUCATION\b\s*?"]
 
         
     if start_index>-1:
@@ -687,13 +693,21 @@ def extract_summary(lines,name,phoneNo):
             summary.remove(summary[-1])
         
  
-    str = ""
-    for word in summary:
-        str=str+" "+word
+  
+   
+    words_to_search = ["profile","profile:","professional","objective","objective:","career","career:","summary","summary:","about" "me","me:"]         
+      
+    for wd in summary[:4]:
+        for word in words_to_search:
+            if wd.lower() == word:
+                summary.remove(wd)
+                break 
+    
+    
+    summary = ' '.join(summary)    
         
     
-    
-    return str            
+    return summary         
     
                
         
@@ -793,10 +807,13 @@ def extract_organization(text):
 def extract_latest_organization(text,model):
     
     text = extract_organization(text)
+
     
-    organization_prompt = f"From the following resume text, extract the most recent organization name the candidate is working. Return only the name of the organization: \n{text}"
+    organization_prompt = f"From the following resume text, extract the name of the most recent organization the candidate has worked for. Focus only on work history and return the organization name \n{text}"
     response = model(organization_prompt, max_length=100, num_return_sequences=True)
     response = response[0]['generated_text']
+    
+    return response
 
  
 

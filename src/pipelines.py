@@ -24,8 +24,9 @@ def pipeline_start(path):
    text_list_pymu = line_remover(text_list_pymu)
    
    # lines = text.splitlines()
-
+   
    education_lines = extract_education_text(text_list_pymu)
+
    
    print("Edu",education_lines[:7])
                           
@@ -71,19 +72,20 @@ def pipeline_start(path):
       pass_out_year_1,pass_out_year_2 = extract_passout_1(education_text_,degree1,degree2)
       
       if degree1 is not None:
-         if degree1.lower() in ["m.","post"]:
-                degree1 = degree1[:2]
+         if degree1.split()[0].lower() in ["m.","post"]:
+                degree1 = ''.join(degree1.split()[:2])
+              
          else:
             degree1=degree1.split()[0]
       
       if degree2 is not None:
-         if degree2.lower() in ["b.","under"]:
-                degree2 = degree2[:2]
+         if degree2.split()[0].lower() in ["b.","under"]:
+                degree2 = ''.join(degree2.split()[:2])
          else:
             degree2= degree2.split()[0]
          
       
-     
+   else:
  
    
       
@@ -229,5 +231,5 @@ path13 = "/home/shiva/Downloads/resumes/New-York-Resume-Template-Creative.pdf"
 path14 ="/home/shiva/Downloads/resumes/Resume_Madhuri-1 1.pdf"
 
 if __name__== '__main__':  
-   pipeline_start(path6)
+   pipeline_start(path14)
    
