@@ -3,7 +3,7 @@ from config import db_connection
 
 
 
-def insert_all(name,phoneNo,countryCode,email,jobTitle,organization,expYears,degree1,degree2,passOutYear1,passOutYear2,college1,college2,summary,percentage1,percentage2,pl,fs,bs,ds,os):
+def insert_all(name,phoneNo,countryCode,email,jobTitle,organization,expYears,degree1,degree2,passOutYear1,passOutYear2,college1,college2,summary,certifications,projects,percentage1,percentage2,pl,fs,bs,ds,os):
     
     mydb = db_connection()
     cursor = mydb.cursor()
@@ -21,8 +21,8 @@ def insert_all(name,phoneNo,countryCode,email,jobTitle,organization,expYears,deg
         return "Candidate already exist in the database"
     
     else:
-        query = "INSERT INTO parser(name,phoneNo,countryCode,email,jobTitle,organization,expYears,degree1,degree2,passOutYear1,passOutYear2,college1,college2,summary,percentage1,percentage2,pl,fs,bs,ds,os) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-        values = (name,phoneNo,countryCode,email,jobTitle,organization,expYears,degree1,degree2,passOutYear1,passOutYear2,college1,college2,summary,percentage1,percentage2,pl,fs,bs,ds,os)
+        query = "INSERT INTO parser(name,phoneNo,countryCode,email,jobTitle,organization,expYears,degree1,degree2,passOutYear1,passOutYear2,college1,college2,summary,percentage1,percentage2,pl,fs,bs,ds,os,certifications,projects) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+        values = (name,phoneNo,countryCode,email,jobTitle,organization,expYears,degree1,degree2,passOutYear1,passOutYear2,college1,college2,summary,percentage1,percentage2,pl,fs,bs,ds,os,certifications,projects)
         cursor.execute(query,values)
         mydb.commit()
         
@@ -64,9 +64,11 @@ def retrive_all(phoneNo):
     bs=feature_list[0][19]
     ds=feature_list[0][20]
     os= feature_list[0][21]
+    certifications=feature_list[0][22]
+    projects = feature_list[0][23]
     
     
-    return name,phoneNo,countryCode,email,jobTitle,organization,yearsOfExp,degree1,degree2,college1,college2,passOutYear1,passOutYear2,summary,percenatge1,percenatge2,pl,fs,bs,ds,os
+    return name,phoneNo,countryCode,email,jobTitle,organization,yearsOfExp,degree1,degree2,college1,college2,passOutYear1,passOutYear2,summary,certifications,projects,percenatge1,percenatge2,pl,fs,bs,ds,os
 
 
 
@@ -105,6 +107,8 @@ def retrive(sno):
     yearsOfExp=feature_list[0][6]
     
     return sno,name,phoneNo,passOutYear,degree,college,yearsOfExp
+    
+    
     
 def update(sno,dict):
   

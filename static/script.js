@@ -56,10 +56,18 @@ document.getElementById("searchForm").addEventListener('submit', async function 
             document.getElementById('passOutYear2').value=data['passOutYear2']||'Not found'
             document.getElementById('percentage2').value=data['percentage2']||'Not found'
             document.getElementById('countryCode').value=data['countryCode']||'Not found'
+            document.getElementById("certifications").value=data['certifications']||'Not found'
+            document.getElementById("projects").value=data['projects']||'Not found'
+            document.getElementById('degree11').value=data['degree1'] || "Not found"
+            document.getElementById("college11").value=data['college1']||"Not found"
+            document.getElementById('passOutYear11').value=data['passOutYear1'] ||"Not found"
+            document.getElementById('percentage11').value=data['percentage1']||'Not found'
 
             document.getElementById("skillsSection").style.display = 'block';
             document.getElementById('profileSummarySection').style.display = 'block';
             document.getElementById("educationSection").style.display = 'block';
+            document.getElementById("certificationsSection").style.display='block'
+            document.getElementById("projectsSection").style.display='block'
             document.querySelector('.right-side').style.display = 'block';
         } else {
             alert("No data found for the given phone number.");
@@ -168,12 +176,23 @@ document.getElementById("uploadForm").addEventListener('submit',async function (
         document.getElementById('passOutYear2').value=result1['passOutYear2']||'Not found'
         document.getElementById('percentage2').value=result1['percentage2']||'Not found'
         document.getElementById("countryCode").value=result1['countryCode']||'Not found'
+        document.getElementById("certifications").value=result1['certifications']||'Not found'
+        document.getElementById("projects").value=result1['projects']||'Not found'
+        document.getElementById('degree11').value=result1['degree1'] || "Not found"
+        document.getElementById("college11").value=result1['college1']||"Not found"
+        document.getElementById('passOutYear11').value=result1['passOutYear1'] ||"Not found"
+        document.getElementById('percentage11').value=result1['percentage1']||'Not found'
+
+
 
 
         document.getElementById("skillsSection").style.display='block'
         document.getElementById('profileSummarySection').style.display='block'
         document.getElementById("educationSection").style.display='block'
+        document.getElementById("certificationsSection").style.display='block'
+        document.getElementById("projectsSection").style.display='block'
         document.querySelector(".right-side").style.display='block'
+    
     }
     catch(error){
         console.error("Error parsing resume:", error)
@@ -210,7 +229,10 @@ document.getElementById("editForm").addEventListener('submit',async function (ev
         degree2:document.getElementById('degree2').value,
         passOutYear2:document.getElementById('passOutYear2').value,
         percentage2:document.getElementById('percentage2').value,
-        countryCode:document.getElementById('countryCode').value
+        countryCode:document.getElementById('countryCode').value,
+        certifications:document.getElementById("certifications").value,
+        projects:document.getElementById("projects").value,
+       
     };
 
 

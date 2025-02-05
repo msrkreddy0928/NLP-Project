@@ -2,6 +2,32 @@ import pdfplumber
 import pymupdf
 import fitz
 import io  
+import pymupdf4llm
+from llama_index.embeddings import HuggingFaceEmbedding
+
+
+embed_model = HuggingFaceEmbedding(model_name="HuggingFaceH4/zephyr-7b-alpha")
+
+
+# pipe = pipeline("text-generation", model=)
+# pipe("pipe",messages)
+
+
+
+# path3 = "/home/shiva/Downloads/resumes/Abhishek Gunda.pdf"
+
+# path3 = "/home/shiva/Downloads/resumes/Azhar khan.pdf"
+
+# md_text = pymupdf4llm.to_markdown(path3)
+
+# # print(md_text)
+
+# llama_reader = pymupdf4llm.LlamaMarkdownReader()
+# llama_docs = llama_reader.load_data(path3)
+
+# print(llama_docs)
+
+
 
 def extract_text_from_pdf(path):
     with pdfplumber.open(path) as pf:
@@ -14,12 +40,12 @@ def extract_text_from_pdf(path):
             
 # path4 = "/home/shiva/Downloads/resumes/Dhananjay Kumar Yadav.pdf" 
 # #path9 = "/home/shiva/Downloads/resumes/Kashetti_Venu.pdf"
-# path3 = "/home/shiva/Downloads/resumes/Azhar khan.pdf"
+
 
 # path10 = "/home/shiva/Downloads/resumes/Dublin-Resume-Template-Modern.pdf"    
 
      
-path3 = "/home/shiva/Downloads/resumes/Abhishek Gunda.pdf"
+
 def extract_text(path):
     
     extracted_text =""
@@ -50,7 +76,7 @@ def extract_text(path):
 
 
 
-extract_text(path3)
+# extract_text(path3)
 
 
 

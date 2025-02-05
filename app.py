@@ -25,7 +25,7 @@ def feature_extraction():
     doc = request.files['file']
    
     
-    name,phoneNo,countryCode,email,jobTitle,organization,yearsOfExp,degree1,degree2,college1,college2,passOutYear1,passOutYear2,summary,percenatge1,percentage2,pl,fs,bs,ds,os = pipeline_start(doc)
+    name,phoneNo,countryCode,email,jobTitle,organization,yearsOfExp,degree1,degree2,college1,college2,passOutYear1,passOutYear2,summary,certifications,projects,percenatge1,percentage2,pl,fs,bs,ds,os = pipeline_start(doc)
     
     if degree1 is None:
         degree1=degree2
@@ -40,14 +40,12 @@ def feature_extraction():
     
     deg_list = {"degree2":degree2,"college2":college2,"passOutYear2":passOutYear2,"percentage2":percentage2}
  
-    dict ={"name":name,"phoneNo":phoneNo,"countryCode":countryCode,"email":email,"jobTitle":jobTitle,"organization":organization,"yearsOfExp":yearsOfExp,"degree1":degree1,"degree2":degree2,"college1":college1,"college2":college2,"passOutYear1":passOutYear1,"passOutYear2":passOutYear2,"summary":summary,"percentage1":percenatge1,"percentage2":percentage2,"pl":pl,"fs":fs,"bs":bs,"ds":ds,"os":os}
+    dict ={"name":name,"phoneNo":phoneNo,"countryCode":countryCode,"email":email,"jobTitle":jobTitle,"organization":organization,"yearsOfExp":yearsOfExp,"degree1":degree1,"degree2":degree2,"college1":college1,"college2":college2,"passOutYear1":passOutYear1,"passOutYear2":passOutYear2,"summary":summary,"certifications":certifications,"projects":projects,"percentage1":percenatge1,"percentage2":percentage2,"pl":pl,"fs":fs,"bs":bs,"ds":ds,"os":os}
     
     return jsonify(dict), 200 
     
  
  
- 
-
      
 @app.route("/save", methods=['POST'])
 def save_features():
@@ -62,7 +60,7 @@ def save_features():
     add_title(job_title)
 
 
-    message = insert_all(data.get("name"),data.get("phoneNo"),data.get("countryCode"),data.get("email"),data.get("jobTitle"),data.get("organization"),data.get("yearsOfExp"),data.get("degree1"),data.get("degree2"),data.get("passOutYear1"),data.get("passOutYear2"),data.get("college1"),data.get("College2"),data.get("summary"),data.get("percentage1"),data.get("percenatge2"),data.get("pl"),data.get("fs"),data.get("bs"),data.get("ds"),data.get("os"))
+    message = insert_all(data.get("name"),data.get("phoneNo"),data.get("countryCode"),data.get("email"),data.get("jobTitle"),data.get("organization"),data.get("yearsOfExp"),data.get("degree1"),data.get("degree2"),data.get("passOutYear1"),data.get("passOutYear2"),data.get("college1"),data.get("College2"),data.get("summary"),data.get("certifications"),data.get("projects"),data.get("percentage1"),data.get("percenatge2"),data.get("pl"),data.get("fs"),data.get("bs"),data.get("ds"),data.get("os"))
  
     dic ={"message":message}
     return jsonify(dic  ) 
@@ -76,10 +74,10 @@ def retrive_features():
     
     print(data.get("phoneNo"))
     
-    name,phoneNo,countryCode,email,jobTitle,organization,yearsOfExp,degree1,degree2,college1,college2,passOutYear1,passOutYear2,summary,percenatge1,percentage2,pl,fs,bs,ds,os= retrive_all(data.get("phoneNo")) 
+    name,phoneNo,countryCode,email,jobTitle,organization,yearsOfExp,degree1,degree2,college1,college2,passOutYear1,passOutYear2,summary,certifications,projects,percenatge1,percentage2,pl,fs,bs,ds,os= retrive_all(data.get("phoneNo")) 
     print("org",organization)
     
-    dict ={"name":name,"phoneNo":phoneNo,"countryCode":countryCode,"email":email,"jobTitle":jobTitle,"organization":organization,"yearsOfExp":yearsOfExp,"degree1":degree1,"degree2":degree2,"college1":college1,"college2":college2,"passOutYear1":passOutYear1,"passOutYear2":passOutYear2,"summary":summary,"percentage1":percenatge1,"percentage2":percentage2,"pl":pl,"fs":fs,"bs":bs,"ds":ds,"os":os}
+    dict ={"name":name,"phoneNo":phoneNo,"countryCode":countryCode,"email":email,"jobTitle":jobTitle,"organization":organization,"yearsOfExp":yearsOfExp,"degree1":degree1,"degree2":degree2,"college1":college1,"college2":college2,"passOutYear1":passOutYear1,"passOutYear2":passOutYear2,"summary":summary,"certifications":certifications,"projects":projects,"percentage1":percenatge1,"percentage2":percentage2,"pl":pl,"fs":fs,"bs":bs,"ds":ds,"os":os}
     
     return jsonify(dict)
 

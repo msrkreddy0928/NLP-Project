@@ -493,13 +493,14 @@ def extract_college_1(lines,model,degree1,degree2):
         college1 = college1.split()
         if college1[0].lower() == 'education':
             college1=college1[1:]
-        college1 =''.join(college1)
+        college1 =' '.join(college1)
     
     if college2:
         college2 = college2.split()
         if college2[0].lower() == 'education':
             college2 = college2[1:]      
-        college2= ''.join(college2)
+        college2= ' '.join(college2)
+          
      
     return college1,college2
        
@@ -744,11 +745,11 @@ def extract_certifications(lines):
     certification_text = None
     
     for line in lines:
-        if "certification" in line.lower() or "courses" in line.lower():
+        if "certification" in line.lower() or "courses" in line.lower() or "certificate" in line.lower():
             index = lines.index(line)
             certification_text = lines[index:]
             break
-    
+    print(certification_text)
     if certification_text:
         certification_text = ''.join(certification_text[1:3])    
     print("cer",certification_text)    

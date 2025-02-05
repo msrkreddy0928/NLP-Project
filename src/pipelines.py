@@ -6,6 +6,13 @@ from feature_extraction import extract_phone_num,extract_name,extrcat_experience
 from transformers import pipeline    
 
 
+from transformers import pipeline
+
+messages = [
+    {"role": "user", "content": "Who are you?"},
+]
+
+
 def pipeline_start(path):
    
 
@@ -63,13 +70,32 @@ def pipeline_start(path):
       
       exp = extract_experience_1(summary)
       
+      if exp is None:
+         exp = extrcat_experience(lines_plumber)
+      
       # extract_percentage(education_text_)
       
       certifications = extract_certifications(text_list_pymu)
       
       projects = extract_projects(text_list_pymu)
       
-      college1,college2 =  extract_college_1(education_lines,model,degree1,degree2)
+      college11,college22 =  extract_college_1(education_lines,model,degree1,degree2)
+      
+      college1,college2,degree_= extract_college(lines_plumber,model,degree1,degree2)
+      
+      if college1.lower()=="education":
+         college1=college11
+      if college2.lower()=="education":
+         college2=college22   
+      
+      if degree1 is None and degree2 is not None:
+         college2=college1
+         college1=None
+      
+      if degree2 is None:
+         college2 =None   
+      
+      
       
       pass_out_year_1,pass_out_year_2 = extract_passout_1(education_text_,degree1,degree2)
       
@@ -140,6 +166,14 @@ def pipeline_start(path):
            
       college1,college2,degree_= extract_college(lines_plumber,model,degree1,degree2)
       
+      
+      if degree1 is None and degree2 is not None:
+         college2=college1
+         college1=None
+      
+      if degree2 is None:
+         college2 =None 
+      
       # certifications = extract_certifications(lines_plumber) 
        
      
@@ -202,7 +236,7 @@ def pipeline_start(path):
    percentage1 = None
    percentage2 = None
    
-   return name,phone_num,countryCode,email,title,latest_organization,exp,degree1,degree2,college1,college2,pass_out_year_1,pass_out_year_2,summary,percentage1,percentage2,skills['programming_languages'],skills['frontend_skills'],skills['backend_skills'],skills['databases'],skills['other_skills']
+   return name,phone_num,countryCode,email,title,latest_organization,exp,degree1,degree2,college1,college2,pass_out_year_1,pass_out_year_2,summary,certifications,projects,percentage1,percentage2,skills['programming_languages'],skills['frontend_skills'],skills['backend_skills'],skills['databases'],skills['other_skills']
    
    
 
@@ -237,6 +271,12 @@ path13 = "/home/shiva/Downloads/resumes/New-York-Resume-Template-Creative.pdf"
 
 path14 ="/home/shiva/Downloads/resumes/Resume_Madhuri-1 1.pdf"
 
+path15 = "/home/shiva/Downloads/resumes/MukarramSultan_Resume1-1.pdf"
+ 
+path16  = "/home/shiva/Downloads/resumes/Nangi Ramesh.pdf"
+
+
+
 if __name__== '__main__':  
-   pipeline_start(path8)
+   pipeline_start(path16)
    
