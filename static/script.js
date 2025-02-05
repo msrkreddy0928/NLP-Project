@@ -41,7 +41,7 @@ document.getElementById("searchForm").addEventListener('submit', async function 
             document.getElementById('bs').value=data['bs']||'Not found';
             document.getElementById('os').value=data['os']||'Not found';
             document.getElementById('pl').value=data['pl']||'Not found';
-            document.getElementById('databases').value=data['ds']||'Not found';
+            document.getElementById('ds').value=data['ds']||'Not found';
          
             document.getElementById('name').value = data['name'] || "Not Found";
             document.getElementById('degree1').value=data['degree1']||'Not Found'
@@ -222,6 +222,12 @@ document.getElementById("editForm").addEventListener('submit',async function (ev
             },
             body:JSON.stringify(data)
         })
+        if(!response.ok){
+            throw new Error(`HTTP error! status: ${response.status}`)
+        }
+        const res=await response.json()
+        console.log(res)
+        alert(res.message)
         
     }
     catch(error){

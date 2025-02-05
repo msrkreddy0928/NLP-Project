@@ -328,9 +328,26 @@ def extract_passout_1(text,degree1,degree2):
     text_college_1=None
     text_college_2=None
      
+    
+    
+    
+    ind1 = min(
+    (text.lower().find('education') if text.lower().find('education') != -1 else float('inf')),
+    (text.lower().find('educational') if text.lower().find('educational') != -1 else float('inf')))
+    
+    
+
+    if ind1 != float('inf'):
+        text = text[ind1:]
+    
+    
+    
+     
     ind = text.lower().find('experience')
     if ind>-1:
         text=text[:ind]
+
+   
 
     if degree1 is not None:
         
@@ -357,6 +374,7 @@ def extract_passout_1(text,degree1,degree2):
         index_1 = text.find(degree2_2)
         text_college_2=text[index_1+len(degree2):]
     
+    print("txt",text_college_2)
     college_list = ["college","university","technology","institute","school"]
 
     if text_college_1 is not None:
@@ -471,9 +489,18 @@ def extract_college_1(lines,model,degree1,degree2):
              else:
                  college2 = college2
             
-
-   
+    if college1:
+        college1 = college1.split()
+        if college1[0].lower() == 'education':
+            college1=college1[1:]
+        college1 =''.join(college1)
     
+    if college2:
+        college2 = college2.split()
+        if college2[0].lower() == 'education':
+            college2 = college2[1:]      
+        college2= ''.join(college2)
+     
     return college1,college2
        
         
@@ -721,10 +748,34 @@ def extract_certifications(lines):
             index = lines.index(line)
             certification_text = lines[index:]
             break
-        
-    print("cer",certification_text[1:3])    
-            
+    
+    if certification_text:
+        certification_text = ''.join(certification_text[1:3])    
+    print("cer",certification_text)    
+    
+    return certification_text        
 
+
+
+        
+def extract_projects(lines):
+    
+    project_text = None
+    
+    for line in lines:
+        if "Projects" in line or "PROJECTS" in line:
+            index = lines.index(line)
+            project_text = lines[index:]
+            break
+    
+    if project_text:
+        project_text = ''.join(project_text[1:3])    
+    print("Per",project_text)    
+    
+    return project_text    
+
+
+    
 
 def extract_email(text):
     

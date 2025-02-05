@@ -1,7 +1,7 @@
 import pdf_text_extraction
 from pdf_text_extraction import extract_text_from_pdf,extract_text
 from preprocessing import text_to_words,split_lines,line_remover
-from feature_extraction import extract_phone_num,extract_name,extrcat_experience,extract_education,pass_out_year_extract,extract_degree,extract_college,extract_summary,extract_education_1,extract_passout,extract_education_text,extract_passout_1,extract_degree_1,extract_summary_1,extract_experience_1,extract_percentage,extract_certifications,extract_college_1,extract_email,extract_title,extract_latest_organization,extract_skills
+from feature_extraction import extract_phone_num,extract_name,extrcat_experience,extract_education,pass_out_year_extract,extract_degree,extract_college,extract_summary,extract_education_1,extract_passout,extract_education_text,extract_passout_1,extract_degree_1,extract_summary_1,extract_experience_1,extract_percentage,extract_certifications,extract_college_1,extract_email,extract_title,extract_latest_organization,extract_skills,extract_projects
 # from mysqldb import insert,retrive
 from transformers import pipeline    
 
@@ -65,7 +65,9 @@ def pipeline_start(path):
       
       # extract_percentage(education_text_)
       
-      # certifications = extract_certifications(text_list_pymu)
+      certifications = extract_certifications(text_list_pymu)
+      
+      projects = extract_projects(text_list_pymu)
       
       college1,college2 =  extract_college_1(education_lines,model,degree1,degree2)
       
@@ -148,7 +150,10 @@ def pipeline_start(path):
          degree2=degree_["grad"]   
    
    
-
+      certifications = extract_certifications(lines_plumber)
+      
+      projects = extract_projects(lines_plumber)
+      
       extract_passout(degrees,degree1,degree2)
    
       if exp ==None:
@@ -187,6 +192,8 @@ def pipeline_start(path):
    print("latest_org",latest_organization)
    print("skills",skills)
    print("summary",summary)
+   print("certifications",certifications)
+   print("projects",projects)
         
       
    # sno = insert(name,phone_num,passout,degree,college,exp)
@@ -231,5 +238,5 @@ path13 = "/home/shiva/Downloads/resumes/New-York-Resume-Template-Creative.pdf"
 path14 ="/home/shiva/Downloads/resumes/Resume_Madhuri-1 1.pdf"
 
 if __name__== '__main__':  
-   pipeline_start(path14)
+   pipeline_start(path8)
    
