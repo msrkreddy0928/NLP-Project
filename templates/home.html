@@ -19,14 +19,16 @@
             </form>
             <form id="searchForm" class="search-form">
                 <div class="search-input">
-                    <!-- <label for="phoneNumber">Search by phone number:</label> -->
-                     <!-- <input type="text" id="countryCode" name="countryCode" placeholder="Country code" class="country-code"> -->
                     <input type="text" id="phoneNumber" name="phoneNumber" placeholder="Enter phone number" class="search-bar">
                 </div>
                 <button type="submit" class="search-btn">Search</button>
+                <div class="search-input">
+                    <input type="text" id="phoneNumber1" name="phoneNumber1" placeholder="Enter phone number" class="search-bar">
+                </div>
+                <button type="submit" class="parse-btn">Parse</button>
             </form>
 
-            <div class="loading" id="loading">
+            <div class="loading" id="loading">  
                 <span></span>
             </div>
         </div>
@@ -34,6 +36,9 @@
         <div class="content-section">
         <div class="left-side">
             <div class="results" id="results">
+                <p><a href="/download" download>
+                <button type="submit" class="download-btn">Download Resume</button>
+                </a></p> 
                 <!-- <h3>Parsed Results:</h3> -->
                 <form id="editForm">
                     <div class="result-row">

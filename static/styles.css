@@ -216,6 +216,8 @@ h2{
 .search-btn {
     background-color: #007BFF;
     color: white;
+    height: 35px;
+    margin-top: 60px;
     border: none;
     padding: 10px 10px;
     border-radius: 4px;
@@ -223,6 +225,35 @@ h2{
     font-size: 16px;
     transition: background-color 0.3s ease;
 }
+.parse-btn {
+    background-color:  #4CAF50;
+    color: white;
+    height: 35px;
+    margin-top: 60px;
+    border: none;
+    padding: 10px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+.download-btn {
+    background-color:  #04cfbe;
+    color: white;
+    height: 35px;
+    margin-bottom: 60px;
+    border: none;
+    padding: 10px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+
+
+
+
 
 .search-btn:hover {
     background-color: #0056b3;
@@ -234,6 +265,7 @@ h2{
     border-radius: 4px;
     font-size: 14px;
     box-sizing: border-box;
+    margin:60px
 }
 .search-bar:focus{
     border-color: #4CAF50;

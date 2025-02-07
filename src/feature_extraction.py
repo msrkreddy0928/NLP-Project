@@ -14,6 +14,7 @@ nlp = spacy.load("en_core_web_sm")
 
 
 def extract_phone_num(text):
+    
     pattern = r"\(?\+?\(?\d{1,3}\)?[-.\s]?\(?\d{1,4}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,4}"
     numbers = re.findall(pattern, text)
     if len(numbers)<1:
@@ -178,6 +179,7 @@ def extract_education_1(lines,model):
 def extract_degree(text):
 
     degree_set_pg =("m.","m.tech","mtech","master","masters","post","m.a")
+
     degree_set_grad = ("bachelor","bachelors","arts","b.tech","btech","ba","be","b.","b.e","b.a")
     
     txt= text.split()
@@ -228,12 +230,28 @@ def extract_degree(text):
 
 def extract_degree_1(text):
     
-    degree_set_pg =("m.","m.tech","mtech","master","masters","post","m.a")
+    # degree_set_pg =("m.","m.tech","mtech","master","masters","post","m.a")
+    
+    degree_set_pg = (
+   "m.tech", "mtech", "master", "masters", "post", "m.a",  "m.", "mba", "msc", "mfa", "m.ed", 
+    "ms", "m.phil", "ll.m", "mim", "m.arch", "m.des", "m.s.n", "m.b.a", "m.p.h", "m.j", 
+    "m.d", "m.d.s", "dba", "dnp", "dvm", "ed.d", "phd", "md", "jd", "dmd", "dma", "m.dent", 
+    "mpa", "mpp", "mim", "m.pharm", "msw", "mat", "m.a.t", "ll.m", "mfa", "mra", "mpp", 
+    "m.s.w", "m.c.a", "msc.eng", "d.sc", "dba", "dm", "d.eng", "m.eng", "mba.finance", 
+    "msc.computer science", "mfa.theatre", "mpa.international", "d.c.l", "d.mus.a", 
+    "m.arch.urban", "mba.marketing", "mba.hrm", "m.phil.sociology", "msc.biotechnology", 
+    "msc.physics", "msc.chemistry", "m.des.graphic", "msc.economics", "d.sc.law", "d.v.m", 
+    "m.dental", "m.arts", "msc.healthcare", "mba.business", "m.law", "m.eng.civil", "msc.geology",
+    "msc.engineering", "mba.operations", "msc.earth science", "msc.aerospace", "msc.socialwork",
+    "msc.data science", "d.lit", "d.mus", "mba.global business", "m.sc.education", "msc.pharma"
+)
+    
+    
     degree_set_grad = ("bachelor","bachelors","arts","associate","b.tech","btech","ba","be","b.","b.e","b.a")
     
     txt= text.split(",")
     
-    print("txt",txt)
+    # print("txt",txt)
     degree=""
     dict1={"pg":None,"grad":None}
     
@@ -277,6 +295,8 @@ def extract_degree_1(text):
 
 def  extract_passout(lines,degree1,degree2):
     
+    pass_out_2=None
+    
     index=-1
     
     if degree1 is not None:
@@ -310,12 +330,15 @@ def  extract_passout(lines,degree1,degree2):
             pattern = r"\d{4}"      
     
             match = re.findall(pattern,txt)
-    
-            print("match2",match)
+            if len(match)==1:
+                pass_out_2=match[0]
+            elif len(match)>=2:
+                pass_out_2=match[1]   
+                
              
     
-    
-    return
+     
+    return pass_out_2
 
     
 
@@ -374,7 +397,7 @@ def extract_passout_1(text,degree1,degree2):
         index_1 = text.find(degree2_2)
         text_college_2=text[index_1+len(degree2):]
     
-    print("txt",text_college_2)
+    # print("txt",text_college_2)
     college_list = ["college","university","technology","institute","school"]
 
     if text_college_1 is not None:
@@ -465,7 +488,7 @@ def extract_college_1(lines,model,degree1,degree2):
         if degree2 is not None:
             response2 = response2.replace(college1,'')
             college2 = response2
-            print("rep",response2)
+        
                   
         
     elif degree2 is not None:
@@ -543,7 +566,7 @@ def extract_college(lines,model,degree1,degree2):
           
       
       college2 = response[index+1:]
-      print("college2",college2)    
+    
       
     
       college_list = ["college","university","technology","institute","school"]
@@ -568,12 +591,12 @@ def extract_college(lines,model,degree1,degree2):
 
 
 
-def extrcat_experience(lines):
+def extract_experience(lines):
     
     pattern = r"\d{1,2}\+?\s?years"
     for line in lines:
         if 'experience' in line.lower():
-            exp = re.findall(pattern,line)
+            exp = re.findall(pattern,line.lower())
             if len(exp)>0:
                 return exp[0]
             
@@ -582,16 +605,28 @@ def extrcat_experience(lines):
  
  
 def extract_experience_1(text):
+    
     pattern = r"\d{1,2}\+?\s?years"
     
-    exp = re.findall(pattern,text)
-    
+    exp = re.findall(pattern,text.lower())
     
     if len(exp)>0:
         return exp[0]
     
     else:
         return None            
+
+
+
+# text = "verall, 5+ Years of experience as DevOps/AWS Engg., in areas of Build / Release / Environment Management, releases for multiple Applications running on both Linux & Windows based distributed Infrastructure.  Work on rotational shifts in order to provide the support on 24/7 basis.  Handling customer escalations, managing vendors and providing customer satisfaction through self and Team performance."
+
+# # text = text.splitlines()
+# print(text.split())
+# print(extract_experience(text))
+
+
+
+
 
 
 
@@ -662,7 +697,7 @@ def extract_summary_1(text):
     summary = ' '.join(summary1)    
         
     
-    print(summary)
+    # print(summary)
 
     return summary   
     
@@ -723,7 +758,7 @@ def extract_summary(lines,name,phoneNo):
  
   
    
-    words_to_search = ["profile","profile:","professional","objective","objective:","career","career:","summary","summary:","about" "me","me:"]         
+    words_to_search = ["profile","profile:","professional","objective","objective:","career","career:","summary","summary:","about","me","me:"]         
       
     for wd in summary[:4]:
         for word in words_to_search:
@@ -749,7 +784,7 @@ def extract_certifications(lines):
             index = lines.index(line)
             certification_text = lines[index:]
             break
-    print(certification_text)
+    # print(certification_text)
     if certification_text:
         certification_text = ''.join(certification_text[1:3])    
     print("cer",certification_text)    
@@ -807,7 +842,7 @@ if os.path.exists(KNOWN_TITLES_FILE):
         with open(KNOWN_TITLES_FILE, "r") as file:
             known_job_titles= set(json.load(file))  # Load as a set for quick lookup
     except (json.JSONDecodeError, ValueError):
-        print(f"Warning: {KNOWN_TITLES_FILE} contains invalid JSON. Initializing an empty set.")
+        # print(f"Warning: {KNOWN_TITLES_FILE} contains invalid JSON. Initializing an empty set.")
         known_job_titles= set()
 else:
     known_job_titles= {"Software Engineer", "Software Developer", "AI Developer", "Data Scientist", "Project Manager", "Web Developer", "Business Analyst"}

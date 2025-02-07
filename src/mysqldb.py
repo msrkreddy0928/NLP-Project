@@ -1,9 +1,9 @@
 from config import db_connection
+import io
+import mimetypes
 
 
-
-
-def insert_all(name,phoneNo,countryCode,email,jobTitle,organization,expYears,degree1,degree2,passOutYear1,passOutYear2,college1,college2,summary,certifications,projects,percentage1,percentage2,pl,fs,bs,ds,os):
+def insert_all(name,phoneNo,countryCode,email,jobTitle,organization,expYears,degree1,degree2,passOutYear1,passOutYear2,college1,college2,summary,certifications,projects,percentage1,percentage2,pl,fs,bs,ds,os,file_data,file):
     
     mydb = db_connection()
     cursor = mydb.cursor()
@@ -21,15 +21,52 @@ def insert_all(name,phoneNo,countryCode,email,jobTitle,organization,expYears,deg
         return "Candidate already exist in the database"
     
     else:
-        query = "INSERT INTO parser(name,phoneNo,countryCode,email,jobTitle,organization,expYears,degree1,degree2,passOutYear1,passOutYear2,college1,college2,summary,percentage1,percentage2,pl,fs,bs,ds,os,certifications,projects) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-        values = (name,phoneNo,countryCode,email,jobTitle,organization,expYears,degree1,degree2,passOutYear1,passOutYear2,college1,college2,summary,percentage1,percentage2,pl,fs,bs,ds,os,certifications,projects)
-        cursor.execute(query,values)
-        mydb.commit()
+        try:
+            query = "INSERT INTO parser(name,phoneNo,countryCode,email,jobTitle,organization,expYears,degree1,degree2,passOutYear1,passOutYear2,college1,college2,summary,percentage1,percentage2,pl,fs,bs,ds,os,certifications,projects) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            values = (name,phoneNo,countryCode,email,jobTitle,organization,expYears,degree1,degree2,passOutYear1,passOutYear2,college1,college2,summary,percentage1,percentage2,pl,fs,bs,ds,os,certifications,projects)
+            cursor.execute(query,values)
+            mydb.commit()
         
+            query = "select sno from parser where phoneNo=%s"
+            cursor.execute(query,(phoneNo,))
+            sno = cursor.fetchone()
+            print(sno[0])
+            insert_doc(file_data,file,sno[0])
+        
+        except:
+             mydb.rollback()
+             
+             return "Error in saving data"
+              
+        finally:
+             cursor.close()
+             mydb.close()
+    
         return "Data saved successfully"
     
     
-def retrive_all(phoneNo):  
+    
+    
+def insert_doc(file_data,file,sno):
+    mydb = db_connection()
+    cursor = mydb.cursor()
+     
+    binary_data = file_data.read()
+      
+    query = "INSERT INTO pdf_files (filename, file_data,file_type,parserSno)VALUES (%s, %s, %s,%s)"
+    values = (file.filename,binary_data,file.content_type,sno)
+    cursor.execute(query,values)
+    mydb.commit()
+    
+    cursor.close()
+    mydb.close()
+         
+ 
+ 
+ 
+    
+    
+def retrieve_all(phoneNo):  
     mydb = db_connection()
     cursor = mydb.cursor()
     query = "select * from parser where phoneNo=%s"
@@ -72,41 +109,63 @@ def retrive_all(phoneNo):
 
 
 
-
-def insert(name,phoneNo,passOutYear,degree,college,yearsOfExp):
+def retrieve_all_candidates():
     
     mydb = db_connection()
     cursor = mydb.cursor()
     
-    query = "INSERT INTO resume(name,phoneNo,passOutYear,degree,college,yearsOfExp) VALUES (%s,%s,%s,%s,%s,%s)"
-    values = (name,phoneNo,passOutYear,degree,college,yearsOfExp)
-    cursor.execute(query,values)
-    mydb.commit()
-    query = "select sno from resume where phoneNo=%s"
-    cursor.execute(query,(phoneNo,))
-    sno=cursor.fetchone()
-    mydb.close()
-    if sno[0]:
-        return sno[0]
-    else:
-        return None
-      
+    query = "select name,email,phoneNo,pl,fs,bs,ds,os from parser"
     
-def retrive(sno):  
-    mydb = db_connection()
-    cursor = mydb.cursor()
-    query = "select * from resume where sno="+str(sno)
     cursor.execute(query)
     feature_list = cursor.fetchall()
-    sno = feature_list[0][0]
-    name=feature_list[0][1]
-    phoneNo=feature_list[0][2]
-    passOutYear=feature_list[0][3]
-    degree=feature_list[0][4]
-    college=feature_list[0][5]
-    yearsOfExp=feature_list[0][6]
     
-    return sno,name,phoneNo,passOutYear,degree,college,yearsOfExp
+    # print(feature_list)
+
+    return feature_list
+
+
+
+retrieve_all_candidates()
+    
+    
+    
+def save_resumes(file,phoneNo):
+    
+    mydb = db_connection()
+    cursor = mydb.cursor()
+    
+    file_name = file.split('/')[-1]
+    
+    mime_type, encoding = mimetypes.guess_type(file)
+    
+    with open(file,'rb') as file:
+        binary_data = file.read()
+      
+    query = "INSERT INTO resume_files(phoneno,filename,file_data,file_type)VALUES (%s, %s, %s,%s)"
+    values = (phoneNo,file_name,binary_data,mime_type)
+    cursor.execute(query,values)
+    mydb.commit()
+    
+    cursor.close()
+    mydb.close()
+    
+    
+def retrieve_resumes(phoneNo):
+    
+    mydb = db_connection()
+    cursor = mydb.cursor()
+    
+    query = "select filename,file_data from resume_files where phoneno=%s"
+    values = (phoneNo,)
+    cursor.execute(query,values)
+    result = cursor.fetchone()
+    
+    return result[0],result[1]
+    
+
+
+    
+
     
     
     

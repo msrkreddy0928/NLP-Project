@@ -1,0 +1,108 @@
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f7fa;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+.container {
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+
+form {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+label {
+    margin-top: 15px;
+    color: #333;
+}
+
+input[type="text"] {
+    padding: 10px;
+    margin: 5px 0 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+
+.output {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #e8f4e8;
+    border-radius: 8px;
+    display: none; 
+}
+
+.candidate-details {
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* .candidate-cell {
+    width: 30%;
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+} */
+
+.candidate-cell label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.candidate-cell input {
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+
+.candidate-details {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.candidate-cell {
+    display: flex;
+    flex-direction: column;
+    flex: 2;
+    margin-left: 15px;
+    border-radius: 5px;
+}

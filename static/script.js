@@ -82,6 +82,91 @@ document.getElementById("searchForm").addEventListener('submit', async function 
     }
 });
 
+document.getElementById("searchForm").addEventListener('submit', async function (event) {
+    event.preventDefault();
+    const phoneNumber = document.getElementById("phoneNumber1").value;
+
+    if (!phoneNumber) {
+        alert("Please enter a valid phone number");
+        return;
+    }
+
+    if(phoneNumber.length>10){
+        alert("Phone number cannot be more than 10 digits")
+        return;
+    }
+
+    // Disable the upload form while search results are being fetched
+    document.getElementById('uploadForm').querySelector('button').disabled = true;
+
+    document.getElementById('loading').style.display = 'block';
+
+    try {
+        const response = await fetch('/getdetails',{method:'POST',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify({phoneNo:phoneNumber})
+
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+
+        // If data is found, populate the form fields
+        if (data) {
+            document.getElementById('results').style.display='block';
+            document.getElementById('email').value = data['email'] || "Not Found";
+            document.getElementById('jobTitle').value = data['jobTitle'] || "Not Found";
+            document.getElementById('organization').value = data['organization'] || "Not Found";
+            document.getElementById('fs').value=data['fs']||'Not found';
+            document.getElementById('bs').value=data['bs']||'Not found';
+            document.getElementById('os').value=data['os']||'Not found';
+            document.getElementById('pl').value=data['pl']||'Not found';
+            document.getElementById('ds').value=data['ds']||'Not found';
+         
+            document.getElementById('name').value = data['name'] || "Not Found";
+            document.getElementById('degree1').value=data['degree1']||'Not Found'
+            document.getElementById('college1').value=data['college1']||'Not Found'
+            document.getElementById('percentage1').value=data['percentage1']||'Not found'
+            document.getElementById('passOutYear1').value=data['passOutYear1']||'Not Found'
+            document.getElementById('yearsOfExp').value=data['yearsOfExp']||'Not Found'
+            document.getElementById('phoneNo').value = phoneNumber;
+            document.getElementById('summary').value=data['summary']||'Not found'
+            document.getElementById('college2').value=data['college2']||'Not found'
+            document.getElementById('degree2').value=data['degree2']||'Not found'
+            document.getElementById('passOutYear2').value=data['passOutYear2']||'Not found'
+            document.getElementById('percentage2').value=data['percentage2']||'Not found'
+            document.getElementById('countryCode').value=data['countryCode']||'Not found'
+            document.getElementById("certifications").value=data['certifications']||'Not found'
+            document.getElementById("projects").value=data['projects']||'Not found'
+            document.getElementById('degree11').value=data['degree1'] || "Not found"
+            document.getElementById("college11").value=data['college1']||"Not found"
+            document.getElementById('passOutYear11').value=data['passOutYear1'] ||"Not found"
+            document.getElementById('percentage11').value=data['percentage1']||'Not found'
+
+            document.getElementById("skillsSection").style.display = 'block';
+            document.getElementById('profileSummarySection').style.display = 'block';
+            document.getElementById("educationSection").style.display = 'block';
+            document.getElementById("certificationsSection").style.display='block'
+            document.getElementById("projectsSection").style.display='block'
+            document.querySelector('.right-side').style.display = 'block';
+        } else {
+            alert("No data found for the given phone number.");
+        }
+
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        alert("An error occurred while fetching data. Please try again.");
+    } finally {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('uploadForm').querySelector('button').disabled = false; // Re-enable the upload form
+    }
+});
+
+
+
 
 function toggleSection(event){
     const sectionContent=event.target.nextElementSibling;
@@ -135,6 +220,8 @@ document.getElementById("uploadForm").addEventListener('submit',async function (
     }
     const formData=new FormData()
     formData.append('file',file)
+
+    document.querySelector('.right-side').style.display="none"
 
     document.getElementById('loading').style.display='block'
     document.getElementById('results').style.display='none'
@@ -232,6 +319,7 @@ document.getElementById("editForm").addEventListener('submit',async function (ev
         countryCode:document.getElementById('countryCode').value,
         certifications:document.getElementById("certifications").value,
         projects:document.getElementById("projects").value,
+        file:document.getElementById('file').value                                                                                                                                                                                                            
        
     };
 

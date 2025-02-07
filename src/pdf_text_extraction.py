@@ -3,10 +3,15 @@ import pymupdf
 import fitz
 import io  
 import pymupdf4llm
-from llama_index.embeddings import HuggingFaceEmbedding
+
+# from llama_index.embeddings import HuggingFaceEmbedding
 
 
-embed_model = HuggingFaceEmbedding(model_name="HuggingFaceH4/zephyr-7b-alpha")
+# embed_model = HuggingFaceEmbedding(model_name="HuggingFaceH4/zephyr-7b-alpha")
+
+
+
+
 
 
 # pipe = pipeline("text-generation", model=)
@@ -18,9 +23,12 @@ embed_model = HuggingFaceEmbedding(model_name="HuggingFaceH4/zephyr-7b-alpha")
 
 # path3 = "/home/shiva/Downloads/resumes/Azhar khan.pdf"
 
-# md_text = pymupdf4llm.to_markdown(path3)
 
-# # print(md_text)
+# path4 = "/home/shiva/Downloads/resumes/Dhananjay Kumar Yadav.pdf" 
+
+# md_text = pymupdf4llm.to_markdown(path4)
+
+# print(md_text)
 
 # llama_reader = pymupdf4llm.LlamaMarkdownReader()
 # llama_docs = llama_reader.load_data(path3)

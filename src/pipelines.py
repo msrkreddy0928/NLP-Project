@@ -1,7 +1,7 @@
 import pdf_text_extraction
 from pdf_text_extraction import extract_text_from_pdf,extract_text
 from preprocessing import text_to_words,split_lines,line_remover
-from feature_extraction import extract_phone_num,extract_name,extrcat_experience,extract_education,pass_out_year_extract,extract_degree,extract_college,extract_summary,extract_education_1,extract_passout,extract_education_text,extract_passout_1,extract_degree_1,extract_summary_1,extract_experience_1,extract_percentage,extract_certifications,extract_college_1,extract_email,extract_title,extract_latest_organization,extract_skills,extract_projects
+from feature_extraction import extract_phone_num,extract_name,extract_experience,extract_education,pass_out_year_extract,extract_degree,extract_college,extract_summary,extract_education_1,extract_passout,extract_education_text,extract_passout_1,extract_degree_1,extract_summary_1,extract_experience_1,extract_percentage,extract_certifications,extract_college_1,extract_email,extract_title,extract_latest_organization,extract_skills,extract_projects
 # from mysqldb import insert,retrive
 from transformers import pipeline    
 
@@ -71,7 +71,7 @@ def pipeline_start(path):
       exp = extract_experience_1(summary)
       
       if exp is None:
-         exp = extrcat_experience(lines_plumber)
+         exp = extract_experience(lines_plumber)
       
       # extract_percentage(education_text_)
       
@@ -119,9 +119,10 @@ def pipeline_start(path):
       
       phone_num,countryCode =  extract_phone_num(text_plumber)
       
-      exp = extrcat_experience(lines_plumber)
+      exp = extract_experience(lines_plumber)
          
       pass_out_year_1 = pass_out_year_extract(lines_plumber)
+
    
       summary=extract_summary(lines_plumber,name,phone_num)
       
@@ -131,14 +132,13 @@ def pipeline_start(path):
       
       education = extract_education(education_text,model)
       
+      
       # extract_percentage(education_text)
       
       degrees_dict_1= extract_degree(degrees)
       
       degrees_dict_2 = extract_degree(education)
       
-      
-     
       
       if degrees_dict_1["pg"] is None:
          
@@ -161,8 +161,6 @@ def pipeline_start(path):
       else:
          degree2=degrees_dict_1["grad"]
          
-      pass_out_year_2=None   
-      
            
       college1,college2,degree_= extract_college(lines_plumber,model,degree1,degree2)
       
@@ -183,12 +181,14 @@ def pipeline_start(path):
       elif degree2 is None:
          degree2=degree_["grad"]   
    
-   
+      
+      
+      pass_out_year_2 = extract_passout(degrees,degree1,degree2)
+      
       certifications = extract_certifications(lines_plumber)
       
       projects = extract_projects(lines_plumber)
-      
-      extract_passout(degrees,degree1,degree2)
+     
    
       if exp ==None:
          exp = "Experience not found"
@@ -249,7 +249,7 @@ path2 = "/home/shiva/Downloads/resumes/Azhar khan.pdf"
 
 path3 = "/home/shiva/Downloads/resumes/Abhishek Gunda.pdf"
 
-path4 = "/home/shiva/Downloads/resumes/Dhananjay Kumar Yadav.pdf" 
+ 
 
 path5 = "/home/shiva/Downloads/resumes/Ketan Gwari.pdf"
 
@@ -275,7 +275,7 @@ path15 = "/home/shiva/Downloads/resumes/MukarramSultan_Resume1-1.pdf"
  
 path16  = "/home/shiva/Downloads/resumes/Nangi Ramesh.pdf"
 
-
+path17 = "/home/shiva/Downloads/resumes/Venkata Reddy Yeruva.pdf"
 
 if __name__== '__main__':  
    pipeline_start(path16)
