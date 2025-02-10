@@ -82,7 +82,7 @@ document.getElementById("searchForm").addEventListener('submit', async function 
     }
 });
 
-document.getElementById("searchForm").addEventListener('submit', async function (event) {
+document.getElementById("parseForm").addEventListener('submit', async function (event) {
     event.preventDefault();
     const phoneNumber = document.getElementById("phoneNumber1").value;
 

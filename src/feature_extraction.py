@@ -5,14 +5,13 @@ from datetime import date
 import os 
 import sys
 sys.path.append("/home/shiva/Desktop/ML/Files/NLP")
-from skills import skills_1
 import json   
 
 
 ext_degree =""
 nlp = spacy.load("en_core_web_sm")
 
-
+#Extracts a valid phone Number from the resume text
 def extract_phone_num(text):
     
     pattern = r"\(?\+?\(?\d{1,3}\)?[-.\s]?\(?\d{1,4}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,4}"
@@ -28,7 +27,8 @@ def extract_phone_num(text):
         return "valid number not found"
   
     
-    
+
+#Extracts potential names from the text.
 def name_tagging(text):
     
     words_to_search = [r"profile\s*:?",r"objective\s*:?",r"summary\s*:?",r"about\s*"]
@@ -77,7 +77,9 @@ def name_tagging(text):
          
     return str
     
-    
+ 
+ 
+#Extracts the full name of the person from the resume using a T5 model.    
 def extract_name(text,model):    
     
     txt = name_tagging(text)   
@@ -93,6 +95,8 @@ def extract_name(text,model):
     return response
     
 
+
+#Extracts the latest pass-out year from the given lines of text (resume).
 def pass_out_year_extract(lines):
     
 
@@ -119,7 +123,7 @@ def pass_out_year_extract(lines):
  
     
     
-      
+#Extracts a portion of text related to education from the resume lines.      
 def extract_education_text(lines):
     index=0
     for line in lines:
@@ -132,7 +136,7 @@ def extract_education_text(lines):
     return lines[index:index+20]     
         
         
-    
+#Extracts detailed education information from the given lines using a T5 model. 
 def extract_education(lines,model):
     
     # text =education_text(lines)
@@ -152,6 +156,8 @@ def extract_education(lines,model):
     return response 
 
 
+
+#Extracts detailed education information from the given lines using a T5 model. 
 def extract_education_1(lines,model):
     
     # lines = education_text(lines)
@@ -169,13 +175,12 @@ def extract_education_1(lines,model):
     
     response = response[0]['generated_text']     
     
-   
-       
-    
     return response
    
   
 
+
+#Extracts the post-graduate (pg) and graduate (grad) degree information from the T5 response.
 def extract_degree(text):
 
     degree_set_pg =("m.","m.tech","mtech","master","masters","post","m.a")
@@ -227,7 +232,7 @@ def extract_degree(text):
     return dict1
  
 
-
+#Extracts the post-graduate (pg) and graduate (grad) degree information from the resume text..
 def extract_degree_1(text):
     
     # degree_set_pg =("m.","m.tech","mtech","master","masters","post","m.a")
@@ -291,8 +296,7 @@ def extract_degree_1(text):
      
 
 
-
-
+# Extracts the pass-out year from the provided text lines for the given degrees.
 def  extract_passout(lines,degree1,degree2):
     
     pass_out_2=None
@@ -341,7 +345,7 @@ def  extract_passout(lines,degree1,degree2):
     return pass_out_2
 
     
-
+# Extracts the pass-out year for all degress from the resume text.
 def extract_passout_1(text,degree1,degree2):
     
     pattern = r"-?\d{4}-?" 
@@ -434,13 +438,13 @@ def extract_passout_1(text,degree1,degree2):
         
  
   
-
-    
-
     return pass_out_year_1,pass_out_year_2
 
 
 
+
+
+#Extracts the names of colleges or universities from the education section of a resume using T5 model.
 def extract_college_1(lines,model,degree1,degree2):
     
     college_list = ["college","university","technology","institute","school"]
@@ -532,7 +536,7 @@ def extract_college_1(lines,model,degree1,degree2):
 
     
 
-
+#Extracts the names of colleges or universities from the education section of a resume using T5 model.
 def extract_college(lines,model,degree1,degree2):
     
       lines = extract_education_text(lines)
@@ -590,7 +594,7 @@ def extract_college(lines,model,degree1,degree2):
     
 
 
-
+#extracts the years of experience from the resume text.
 def extract_experience(lines):
     
     pattern = r"\d{1,2}\+?\s?years"
@@ -603,7 +607,7 @@ def extract_experience(lines):
  
  
  
- 
+#extracts the years of experience from the resume summary.
 def extract_experience_1(text):
     
     pattern = r"\d{1,2}\+?\s?years"
@@ -643,7 +647,7 @@ def extract_percentage(text):
 
 
 
-
+#Extract the summary from the resume text.
 def extract_summary_1(text):
     
     start_index=-1
@@ -703,7 +707,7 @@ def extract_summary_1(text):
     
 
 
-
+#Extract the summary from the resume text.
 def extract_summary(lines,name,phoneNo):
     
     start_index=-1
@@ -773,8 +777,9 @@ def extract_summary(lines,name,phoneNo):
     return summary         
     
                
+ 
         
-        
+#Extracts the certifications section from the resume text.        
 def extract_certifications(lines):
     
     certification_text = None
@@ -793,7 +798,7 @@ def extract_certifications(lines):
 
 
 
-        
+#Extracts the projects section from the resume text.        
 def extract_projects(lines):
     
     project_text = None
@@ -812,7 +817,7 @@ def extract_projects(lines):
 
 
     
-
+#Extarcts the valid email id from the resume.
 def extract_email(text):
     
     email = None
@@ -833,7 +838,7 @@ def extract_email(text):
     
 
    
-            
+#loading the job_titles file           
 KNOWN_TITLES_FILE = "known_job_titles.json"
  
 # Load known job titles
@@ -874,12 +879,16 @@ def add_title(job_title):
         save_known_job_titles(known_job_titles)   
                               
  
+#saves the job titles
 def save_known_job_titles(known_job_titles, KNOWN_TITLES_FILE="known_job_titles.json"):
     """Save the updated set of job titles to the JSON file."""
     with open(KNOWN_TITLES_FILE, "w") as file:
         json.dump(list(known_job_titles), file)
         
-        
+ 
+ 
+ 
+# Extract the text related to previous experience.        
 def extract_organization(text):
  
     keywords=['Work History','Employment','Professional Background','Work Experience','Professional Experience','Employment History',
@@ -891,11 +900,11 @@ def extract_organization(text):
         return text
             
 
+
+#Extracts the latest organization using T5 model.
 def extract_latest_organization(text,model):
     
     text = extract_organization(text)
-
-    
     organization_prompt = f"From the following resume text, extract the name of the most recent organization the candidate has worked for. Focus only on work history and return the organization name \n{text}"
     response = model(organization_prompt, max_length=100, num_return_sequences=True)
     response = response[0]['generated_text']
@@ -905,17 +914,62 @@ def extract_latest_organization(text,model):
  
 
 
-
-def extract_skills(text):
-    extracted_skills = {category: set() for category in skills_1}
+# loading the skills file 
+skills_1 = "skills.json"
  
-    for category, skill_list in skills_1.items():
+
+if os.path.exists(skills_1):
+    try:
+        with open(skills_1, "r") as file:
+            cat_skills= json.load(file) 
+    except (json.JSONDecodeError, ValueError) as e:
+        print(f"Warning: {skills_1} contains invalid JSON. Error: {e}")
+        cat_skills = {}  # Initialize as empty if invalid JSON
+else:
+    print(f"Warning: {skills_1} not found. Using an empty dictionary.")
+    cat_skills = {}
+
+
+ 
+# Extracts the skills from the resume by matching with skills in  skills json file
+def extract_skills(text):
+    extracted_skills = {category: set() for category in cat_skills}
+
+    for category, skill_list in cat_skills.items():
         for skill in skill_list:
             pattern = r'\b' + re.escape(skill.lower()) + r'\b'
             if re.search(pattern, text.lower()):
                 extracted_skills[category].add(skill)
+
  
     return {category: ",".join(skill_set) if skill_set else "None" for category, skill_set in extracted_skills.items()}
+
+
+
+
+
+
+# add new skills to the skills json file
+def add_skills(skills_dict):
+    for category, skills in skills_dict.items():
+        for skill in skills:
+            if skill.lower() not in cat_skills[category]:
+                cat_skills[category].append(skill.lower())
+        save_skills_file(cat_skills)
+                
+                
+def save_skills_file(cat_skills, skills_1="skills.json"):
+    """Save the updated list of skills to the JSON file."""
+    with open(skills_1, "w") as file:
+        json.dump(cat_skills,file,indent=4)        
+        
+    
+    
+
+    
+    
+
+
 
 
 # from skillID import skills_dict

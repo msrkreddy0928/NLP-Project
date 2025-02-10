@@ -6,23 +6,47 @@ from pipelines import pipeline_start
 
 path ="/home/shiva/Downloads/resumes/Dhananjay Kumar Yadav.pdf"
 
-text_plumber = extract_text_from_pdf(path)
+path2 = "/home/shiva/Downloads/resumes/Azhar khan.pdf"
 
-phone_num,countryCode =  extract_phone_num(text_plumber)
+path3 = "/home/shiva/Downloads/resumes/Abhishek Gunda.pdf"
 
-# save_resumes(path,phone_num)
+ 
+
+path5 = "/home/shiva/Downloads/resumes/Ketan Gwari.pdf"
+
+path6 = "/home/shiva/Downloads/resumes/Nanneboina Ramana.pdf"
+
+path7 = "/home/shiva/Downloads/resumes/Shaik Luqman.pdf"
+
+path8 = "/home/shiva/Downloads/resumes/Swpana Kumari Sahu.pdf"
+
+path9 = "/home/shiva/Downloads/resumes/Kashetti_Venu.pdf"
+path16  = "/home/shiva/Downloads/resumes/Nangi Ramesh.pdf"
+
+path17 = "/home/shiva/Downloads/resumes/Venkata Reddy Yeruva.pdf"
 
 
 
+#saves the resumes to the database.
+def save_resumes_to_db(path):
+    
+    text_plumber = extract_text_from_pdf(path)
+  
+    phone_num,countryCode =  extract_phone_num(text_plumber)
 
-file_name,file_data = retrieve_resumes(phone_num)
+    save_resumes(path,phone_num)
+
+
+save_resumes_to_db(path17)
+
+# file_name,file_data = retrieve_resumes(phone_num)
 
 
 
-download_path = os.path.join("/home/shiva/Downloads/resumesStore", file_name)
+# download_path = os.path.join("/home/shiva/Downloads/resumesStore", file_name)
 
-with open(download_path, 'wb') as file:
-            file.write(file_data)   
+# with open(download_path, 'wb') as file:
+#             file.write(file_data)   
             
             
 

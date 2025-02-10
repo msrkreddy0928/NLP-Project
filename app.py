@@ -5,11 +5,11 @@ import os
 import sys
 sys.path.append('/home/shiva/Desktop/ML/Files/NLP/src')
 from src.pipelines import pipeline_start
-from src.mysqldb import update,insert_all,retrieve_all,retrieve_resumes
-from src.feature_extraction import add_title
+from src.mysqldb import insert_all,retrieve_all,retrieve_resumes
+from src.feature_extraction import add_title,add_skills
 from flask_cors import CORS
 import io
-from src.matching import skill_matcher
+from src.matching import skill_matcher,job_description_matcher
 
 
 app = Flask(__name__)
@@ -21,12 +21,17 @@ file_data =None
 file = None
 file_path = None
 
+
+
+# Route for the home page
 @app.route("/")
 def home():
    
-    return render_template('match.html')
+    return render_template('home.html')
 
 
+
+# Route for feature extraction from the uploaded resume
 @app.route("/extract",methods=['POST'])
 def feature_extraction():
     
@@ -69,7 +74,7 @@ def feature_extraction():
     
  
  
-     
+ # Route for saving extracted features to the database    
 @app.route("/save", methods=['POST'])
 def save_features():
     data= request.json
@@ -80,14 +85,34 @@ def save_features():
     
     add_title(job_title)
     
-    if file_data!=None:
-        file_data.seek(0)
-        
+    dict1={}
     
-    resume = download_file()
-    print("resume",resume)    
+    dict1["programming_languages"] = data.get('pl').split(",")
+   
+    dict1["frontend_skills"] = data.get('fs').split(",")
+    
+    dict1['backend_skills'] = data.get('bs').split(",")
+    
+    dict1["databases"] = data.get('ds').split(",")
+    
+    dict1["other_skills"] = data.get('os').split(",")
+    
+    add_skills(dict1)
+    
+    
+    list1=[]
+    
+    if file_data!=None and file!=None:
+        file_data.seek(0)
+        list1.append(file_data)
+        list1.append(file)
+        
+    else:
+        list1.append(file_path)
+  
+    print("resume",file_path)    
 
-    message = insert_all(data.get("name"),data.get("phoneNo"),data.get("countryCode"),data.get("email"),data.get("jobTitle"),data.get("organization"),data.get("yearsOfExp"),data.get("degree1"),data.get("degree2"),data.get("passOutYear1"),data.get("passOutYear2"),data.get("college1"),data.get("College2"),data.get("summary"),data.get("certifications"),data.get("projects"),data.get("percentage1"),data.get("percenatge2"),data.get("pl"),data.get("fs"),data.get("bs"),data.get("ds"),data.get("os"),file_data,file)
+    message = insert_all(data.get("name"),data.get("phoneNo"),data.get("countryCode"),data.get("email"),data.get("jobTitle"),data.get("organization"),data.get("yearsOfExp"),data.get("degree1"),data.get("degree2"),data.get("passOutYear1"),data.get("passOutYear2"),data.get("college1"),data.get("College2"),data.get("summary"),data.get("certifications"),data.get("projects"),data.get("percentage1"),data.get("percenatge2"),data.get("pl"),data.get("fs"),data.get("bs"),data.get("ds"),data.get("os"),list1)
      
      
     dic ={"message":message}
@@ -95,7 +120,7 @@ def save_features():
 
 
 
-
+# Route to retrieve extracted features based on phone number
 @app.route("/getdata", methods=['POST'])
 def retrieve_features():
     data= request.json
@@ -110,11 +135,14 @@ def retrieve_features():
     return jsonify(dict)
 
 
+
+# Route to retrieve resumes from the database and prepare for download
 @app.route("/getdetails",methods =['post'])
 def retrieve_resumes_from_db():
     data = request.json
     
     file_name,file_data = retrieve_resumes(data.get("phoneNo"))
+    
     
     download_path = os.path.join("/home/shiva/Downloads/resumesStore",file_name)
 
@@ -138,7 +166,6 @@ def retrieve_resumes_from_db():
     percentage1=None
     percentage2 = None
     
-    deg_list = {"degree2":degree2,"college2":college2,"passOutYear2":passOutYear2,"percentage2":percentage2}
  
     dict ={"file":download_path,"name":name,"phoneNo":phoneNo,"countryCode":countryCode,"email":email,"jobTitle":jobTitle,"organization":organization,"yearsOfExp":yearsOfExp,"degree1":degree1,"degree2":degree2,"college1":college1,"college2":college2,"passOutYear1":passOutYear1,"passOutYear2":passOutYear2,"summary":summary,"certifications":certifications,"projects":projects,"percentage1":percenatge1,"percentage2":percentage2,"pl":pl,"fs":fs,"bs":bs,"ds":ds,"os":oss}
     
@@ -146,6 +173,7 @@ def retrieve_resumes_from_db():
   
 
 
+# Route to download the resume file
 @app.route('/download')
 def download_file():
     
@@ -153,19 +181,8 @@ def download_file():
 
 
 
-@app.route("/save",methods=['POST'])
-def save_modify_features():
-    
-    rows_aff = None
-    data = request.get_json()
-    sno_=0
-    rows_aff=update(sno_,data)
-    
-    print(rows_aff)
-    
-    return "ok"
-  
-  
+ 
+ # Route to match skills with existing skills in the database 
 @app.route("/match",methods=['POST'])
 def match_skills():
     
@@ -174,9 +191,21 @@ def match_skills():
     dict1 = skill_matcher(data.get("skills"))
     
     return jsonify(dict1),200  
-  
-  
+
+
+ # Route to match job descriptions 
+@app.route("/matchdesc",methods=['POST'])
+def match_desc():
     
+    data = request.json
+    
+    dict1 = job_description_matcher(data.get("desc"))
+    
+    return jsonify(dict1),200  
+
+  
+  
+# Start the Flask app 
 
 if __name__=="__main__":
    app.run(host='192.168.10.130', port=5000)

@@ -203,7 +203,20 @@ h2{
     color: #a94442;
     border: 1px solid #ebccd1;
 }
+
+
+.form{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+
+}
 .search-form {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+.parse-form{
     display: flex;
     justify-content: center;
     margin-top: 20px;
@@ -222,6 +235,7 @@ h2{
     padding: 10px 10px;
     border-radius: 4px;
     cursor: pointer;
+    text-align: center;
     font-size: 16px;
     transition: background-color 0.3s ease;
 }
@@ -233,6 +247,7 @@ h2{
     border: none;
     padding: 10px 10px;
     border-radius: 4px;
+    text-align: center;
     cursor: pointer;
     font-size: 16px;
     transition: background-color 0.3s ease;

@@ -4,39 +4,10 @@ import fitz
 import io  
 import pymupdf4llm
 
-# from llama_index.embeddings import HuggingFaceEmbedding
-
-
-# embed_model = HuggingFaceEmbedding(model_name="HuggingFaceH4/zephyr-7b-alpha")
 
 
 
-
-
-
-# pipe = pipeline("text-generation", model=)
-# pipe("pipe",messages)
-
-
-
-# path3 = "/home/shiva/Downloads/resumes/Abhishek Gunda.pdf"
-
-# path3 = "/home/shiva/Downloads/resumes/Azhar khan.pdf"
-
-
-# path4 = "/home/shiva/Downloads/resumes/Dhananjay Kumar Yadav.pdf" 
-
-# md_text = pymupdf4llm.to_markdown(path4)
-
-# print(md_text)
-
-# llama_reader = pymupdf4llm.LlamaMarkdownReader()
-# llama_docs = llama_reader.load_data(path3)
-
-# print(llama_docs)
-
-
-
+#Extracts all the text from a given PDF file using pdfplumber.
 def extract_text_from_pdf(path):
     with pdfplumber.open(path) as pf:
         extracted_text =" "
@@ -46,14 +17,12 @@ def extract_text_from_pdf(path):
     return extracted_text        
             
             
-# path4 = "/home/shiva/Downloads/resumes/Dhananjay Kumar Yadav.pdf" 
-# #path9 = "/home/shiva/Downloads/resumes/Kashetti_Venu.pdf"
 
-
-# path10 = "/home/shiva/Downloads/resumes/Dublin-Resume-Template-Modern.pdf"    
-
+  
+  
+  
      
-
+#Extracts all the text from a given PDF file using pymupdf.
 def extract_text(path):
     
     extracted_text =""
@@ -84,7 +53,7 @@ def extract_text(path):
 
 
 
-# extract_text(path3)
+
 
 
 

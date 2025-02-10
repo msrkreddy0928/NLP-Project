@@ -3,7 +3,9 @@ import io
 import mimetypes
 
 
-def insert_all(name,phoneNo,countryCode,email,jobTitle,organization,expYears,degree1,degree2,passOutYear1,passOutYear2,college1,college2,summary,certifications,projects,percentage1,percentage2,pl,fs,bs,ds,os,file_data,file):
+
+#Inserts resume data into the parser table if the candidate doesn't already exist in the database.
+def insert_all(name,phoneNo,countryCode,email,jobTitle,organization,expYears,degree1,degree2,passOutYear1,passOutYear2,college1,college2,summary,certifications,projects,percentage1,percentage2,pl,fs,bs,ds,os,list1):
     
     mydb = db_connection()
     cursor = mydb.cursor()
@@ -31,7 +33,10 @@ def insert_all(name,phoneNo,countryCode,email,jobTitle,organization,expYears,deg
             cursor.execute(query,(phoneNo,))
             sno = cursor.fetchone()
             print(sno[0])
-            insert_doc(file_data,file,sno[0])
+            if len(list1)==1:
+                insert_doc_from_path(list1[0],sno[0])
+            else:
+                insert_doc(list1[0],list1[1],sno[0])    
         
         except:
              mydb.rollback()
@@ -46,7 +51,7 @@ def insert_all(name,phoneNo,countryCode,email,jobTitle,organization,expYears,deg
     
     
     
-    
+#Inserts a resume file into the pdf_files table using binary data and file type information.   
 def insert_doc(file_data,file,sno):
     mydb = db_connection()
     cursor = mydb.cursor()
@@ -61,11 +66,31 @@ def insert_doc(file_data,file,sno):
     cursor.close()
     mydb.close()
          
- 
+
+
+
+#Inserts a resume file from a given file path into the pdf_files table.
+def insert_doc_from_path(file,sno):
+    mydb = db_connection()
+    cursor = mydb.cursor()
+    file_name = file.split('/')[-1]
+    
+    mime_type, encoding = mimetypes.guess_type(file)
+    
+    with open(file,"rb") as file:
+        binary_data = file.read()
+             
+    query = "INSERT INTO pdf_files (filename, file_data,file_type,parserSno)VALUES (%s, %s, %s,%s)"
+    values = (file_name,binary_data,mime_type,sno)
+    cursor.execute(query,values)
+    mydb.commit()
+    
+    cursor.close()
+    mydb.close()
  
  
     
-    
+#Retrieves all features associated with a specific candidate based on their phone number.
 def retrieve_all(phoneNo):  
     mydb = db_connection()
     cursor = mydb.cursor()
@@ -109,13 +134,13 @@ def retrieve_all(phoneNo):
 
 
 
-def retrieve_all_candidates():
+
+#Retrieves a list of candidates based on a custom query from the database.
+def retrieve_all_candidates(query):
     
     mydb = db_connection()
     cursor = mydb.cursor()
-    
-    query = "select name,email,phoneNo,pl,fs,bs,ds,os from parser"
-    
+
     cursor.execute(query)
     feature_list = cursor.fetchall()
     
@@ -125,9 +150,9 @@ def retrieve_all_candidates():
 
 
 
-retrieve_all_candidates()
+
     
-    
+#Saves a resume file into the resume_files table by storing the binary data along with content type.
     
 def save_resumes(file,phoneNo):
     
@@ -149,7 +174,9 @@ def save_resumes(file,phoneNo):
     cursor.close()
     mydb.close()
     
-    
+ 
+ 
+#Retrieves a resume's filename and binary file data for a given phone number from resume_files table. 
 def retrieve_resumes(phoneNo):
     
     mydb = db_connection()
@@ -165,20 +192,9 @@ def retrieve_resumes(phoneNo):
 
 
     
+    
+    
 
-    
-    
-    
-def update(sno,dict):
-  
-  mydb = db_connection()
-  cursor = mydb.cursor()  
-  query=   "UPDATE resume SET name = %s, phoneNo = %s, passOutYear = %s, degree = %s, college = %s, yearsOfExp =%s WHERE sno = %s"
-  values = (dict['name'],dict['phoneNo'],dict['passOutYear'],dict['degree'],dict['college'],dict['expYears'],sno)
-  rows_aff = cursor.execute(query,values)
-  mydb.commit()
-  
-  return rows_aff
   
   
     

@@ -1,14 +1,19 @@
 from mysqldb import retrieve_all_candidates
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
 
+#Matches candidate skills with the job description skills and returns the matched percentage.
 def skill_matcher(job_desc):
     
     job_des_skill_set = job_desc.lower().split(",")
     
     no_of_skills = len(job_des_skill_set)
     
+    query = "select name,email,phoneNo,pl,fs,bs,ds,os from parser"
     
-    candidates_list = retrieve_all_candidates()
+    
+    candidates_list = retrieve_all_candidates(query)
     
     candidates_dict = {}
     
@@ -70,6 +75,67 @@ def skill_matcher(job_desc):
     return return_dict
         
 
-job_desc =  "SQL,Feature Engineering,Machine Learning,TensorFlow,GPT,Generative AI,Deep Learning,Data Science" 
 
-skill_matcher(job_desc)
+
+#Matches similarity between the job description and the candidates summary and returns the matched percenatge.
+def job_description_matcher(desc):
+    
+      
+    query = "select name,email,phoneNo,summary from parser"
+    
+    
+    candidates_list = retrieve_all_candidates(query)
+    
+    candidates_dict = {}
+    
+    vectors = TfidfVectorizer()
+    
+    descriptions = [desc] + [candidate[3] for candidate in candidates_list]
+    
+    tfidf_matrix = vectors.fit_transform(descriptions)
+    
+    desc_vector = tfidf_matrix[0]
+    
+    for i,candidate in enumerate(candidates_list):
+        
+        
+        cosine_sim = cosine_similarity(desc_vector,tfidf_matrix[i+1])
+        
+        candidates_dict[candidate[2]]=cosine_sim[0][0]*100    
+    
+    
+    candidates_dict =  dict(sorted(candidates_dict.items(),key=lambda item: item[1],reverse=True))
+    
+    print(candidates_dict)
+    
+    return_dict={}
+    
+    k=0
+    for i,(key,match) in enumerate(list(candidates_dict.items())[:3]):
+        list1=[]
+        for candiate in candidates_list:
+            k=candiate[2]
+            if k==key:
+                list1.append(candiate[0])
+                list1.append(candiate[1])
+                list1.append(candiate[2])
+                list1.append(match)
+                break
+                
+        return_dict[i]=list1         
+    print(return_dict)    
+        
+    return return_dict
+        
+    
+
+
+         
+    
+    
+        
+    
+    
+    
+    
+    

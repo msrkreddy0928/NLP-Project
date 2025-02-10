@@ -7,23 +7,29 @@ import re
 nltk.download('punkt')
 nltk.download('punkt_tab')
 
-
+#Tokenizes the input text into individual words.
 def text_to_words(text):
     words=word_tokenize(text)
     
     return words
 
+
+# Tags each word in the list with its part of speech.
 def words_tagging(words):
     tagged_words = pos_tag(words)
     return tagged_words
     
 
 
+
+#Splits the input text into lines.
 def split_lines(text):
     lines = text.splitlines()
     return lines
 
 
+
+# Removes unwanted newline characters and empty lines from the input list of lines.
 def line_remover(text_list):
 
     for i,line in enumerate(text_list):

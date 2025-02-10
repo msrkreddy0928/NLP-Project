@@ -2,16 +2,10 @@ import pdf_text_extraction
 from pdf_text_extraction import extract_text_from_pdf,extract_text
 from preprocessing import text_to_words,split_lines,line_remover
 from feature_extraction import extract_phone_num,extract_name,extract_experience,extract_education,pass_out_year_extract,extract_degree,extract_college,extract_summary,extract_education_1,extract_passout,extract_education_text,extract_passout_1,extract_degree_1,extract_summary_1,extract_experience_1,extract_percentage,extract_certifications,extract_college_1,extract_email,extract_title,extract_latest_organization,extract_skills,extract_projects
-# from mysqldb import insert,retrive
 from transformers import pipeline    
 
 
-from transformers import pipeline
-
-messages = [
-    {"role": "user", "content": "Who are you?"},
-]
-
+# Main pipeline function that processes a resume PDF file and extracts relevant information.
 
 def pipeline_start(path):
    
@@ -209,7 +203,7 @@ def pipeline_start(path):
       
    skills = extract_skills(text_plumber)
       
- 
+
  
    print("name",name)
    print("phoneNO",phone_num)
@@ -277,6 +271,9 @@ path16  = "/home/shiva/Downloads/resumes/Nangi Ramesh.pdf"
 
 path17 = "/home/shiva/Downloads/resumes/Venkata Reddy Yeruva.pdf"
 
+
+
+#Start of pipeline
 if __name__== '__main__':  
    pipeline_start(path16)
    

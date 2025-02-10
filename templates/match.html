@@ -8,90 +8,72 @@
 </head>
 <body>
     <div class="container">
+
+        <div class="form1">
         <h1>Skills Matcher </h1>
 
-        <!-- Form to collect user skills -->
         <form id="skillsForm">
             <label for="skills">Enter Skills for Job Requirement (comma separated):</label>
             <input type="text" id="skills" required>
 
             <button type="submit">Submit</button>
         </form>
+    </div>
+
+
+       <div class="form2">
+        <h1>Job Description Matcher </h1>
+        <form id="descForm">
+            <label for="desc">Enter Job Description:</label>
+            <input type="text" id="desc" required>
+
+            <button type="submit">Submit</button>
+        </form>
+
+    </div>
 
         <div id="output" class="output">
-            <!-- This section will display the result -->
             <h2>Result</h2>
             <div id="result">
-                <div class="candidate-details">
-                    <div class="candidate-cell">
-                        <label>Name:</label>
-                        <input type="text" name="name1" id="name1">
-                    </div>
-                    <div class="candidate-cell">
-                        <label>phoneNo:</label>
-                        <input type="text" name="phoneno1" id="phoneno1">
-                    </div>
-                    <div class="candidate-cell">
-                        <label>Email:</label>
-                        <input type="text" name="email1" id="email1">
-                    </div>
-                    <div class="candidate-cell">
-                        <label>Matched Percentage:</label>
-                        <input type="text" name="percenatge1" id="percentage1">
-                    </div>
-                    <div class="candidate-cell">
-                        <label>Unmatched Skills:</label>
-                        <input type="text" name="unmatched1" id="unmatched1">
-                    </div>
-                </div>
-                <div class="candidate-details">
-                    <div class="candidate-cell">
-                        <label>Name:</label>
-                        <input type="text" name="name2" id="name2">
-                    </div>
-                    <div class="candidate-cell">
-                        <label>phoneNo:</label>
-                        <input type="text" name="phoneno2" id="phoneno2">
-                    </div>
-                    <div class="candidate-cell">
-                        <label>Email:</label>
-                        <input type="text" name="email2" id="email2">
-                    </div>
-                    <div class="candidate-cell">
-                        <label>Matched Percentage:</label>
-                        <input type="text" name="percenatge2" id="percentage2">
-                    </div>
-                    <div class="candidate-cell">
-                        <label>Unmatched Skills:</label>
-                        <input type="text" name="unmatched2" id="unmatched2">
-                    </div>
-                </div>
-                <div class="candidate-details">
-                    <div class="candidate-cell">
-                        <label>Name:</label>
-                        <input type="text" name="name3" id="name3">
-                    </div>
-                    <div class="candidate-cell">
-                        <label>phoneNo:</label>
-                        <input type="text" name="phoneno3" id="phoneno3">
-                    </div>
-                    <div class="candidate-cell">
-                        <label>Email:</label>
-                        <input type="text" name="email3" id="email3">
-                    </div>
-                    <div class="candidate-cell">
-                        <label>Matched Percentage:</label>
-                        <input type="text" name="percenatge3" id="percentage3">
-                    </div>
-                    <div class="candidate-cell">
-                        <label>Unmatched Skills:</label>
-                        <input type="text" name="unmatched3" id="unmatched3">
-                    </div>
-                </div>   
+                <table id ="outTable">
+                  <thead>  
+                    <tr>
+                      <th>Name</th>
+                      <th>Phone Number</th>
+                      <th>Email</th>
+                      <th>Matched Percentage</th>
+                      <th>Unmatched Skills</th>
+                    </tr>
+                </thead>
+                <tbody>
+                  
 
-                </div>
+                  </tbody>
+                  </table> 
+                                
             </div>
         </div>
+        <div id="output1" class="output1">
+            <h2>Result</h2>
+            <div id="result">
+                <table id ="outTable1">
+                  <thead>  
+                    <tr>
+                      <th>Name</th>
+                      <th>Phone Number</th>
+                      <th>Email</th>
+                      <th>Matched Percentage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                  
+
+                  </tbody>
+                  </table> 
+                                
+            </div>
+        </div>   
+
     </div>
 
     <script src="{{url_for('static',filename='script1.js')}}">
