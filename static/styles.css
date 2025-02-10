@@ -230,6 +230,7 @@ h2{
     background-color: #007BFF;
     color: white;
     height: 35px;
+    width:90px; 
     margin-top: 60px;
     border: none;
     padding: 10px 10px;
@@ -243,6 +244,7 @@ h2{
     background-color:  #4CAF50;
     color: white;
     height: 35px;
+    width: 90px;
     margin-top: 60px;
     border: none;
     padding: 10px 10px;
@@ -266,11 +268,7 @@ h2{
 }
 
 
-
-
-
-
-.search-btn:hover {
+.search-btn:hover { 
     background-color: #0056b3;
 }
 .search-bar{
@@ -297,6 +295,8 @@ h2{
     font-size: 14px;
     box-sizing: border-box;
 } */
+
+
 .phn-div{
     display: flex;
     flex-direction: row;

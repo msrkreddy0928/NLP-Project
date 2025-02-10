@@ -2,7 +2,7 @@ import pdfplumber
 import pymupdf
 import fitz
 import io  
-import pymupdf4llm
+
 
 
 

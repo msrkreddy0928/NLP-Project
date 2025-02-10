@@ -1,0 +1,9 @@
+transformers
+spacy
+datetime
+flask
+sklearn
+mysqldb
+pymupdf
+pdfplumber
+
