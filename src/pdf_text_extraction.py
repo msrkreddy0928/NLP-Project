@@ -16,10 +16,7 @@ def extract_text_from_pdf(path):
     
     return extracted_text        
             
-            
 
-  
-  
   
      
 #Extracts all the text from a given PDF file using pymupdf.
