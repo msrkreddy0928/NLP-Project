@@ -1,7 +1,7 @@
 import pdf_text_extraction
 from pdf_text_extraction import extract_text_from_pdf,extract_text
 from preprocessing import text_to_words,split_lines,line_remover
-from feature_extraction import extract_phone_num,extract_name,extract_experience,extract_education,pass_out_year_extract,extract_degree,extract_college,extract_summary,extract_education_1,extract_passout,extract_education_text,extract_passout_1,extract_degree_1,extract_summary_1,extract_experience_1,extract_percentage,extract_certifications,extract_college_1,extract_email,extract_title,extract_latest_organization,extract_skills,extract_projects
+from feature_extraction import extract_phone_num,extract_all_organizations,extract_name,extract_experience,extract_education,pass_out_year_extract,extract_degree,extract_college,extract_summary,extract_education_1,extract_passout,extract_education_text,extract_passout_1,extract_degree_1,extract_summary_1,extract_experience_1,extract_percentage,extract_certifications,extract_college_1,extract_email,extract_title,extract_latest_organization,extract_skills,extract_projects
 from transformers import pipeline    
 
 
@@ -106,6 +106,10 @@ def pipeline_start(path):
          else:
             degree2= degree2.split()[0]
          
+      org_list,exp_list = extract_all_organizations(text_pymu,model)
+      if org_list is not None:
+         org_list =org_list[:2]
+         exp_list = exp_list[:2]
       
    else:
  
@@ -183,6 +187,11 @@ def pipeline_start(path):
       
       projects = extract_projects(lines_plumber)
      
+      org_list,exp_list = extract_all_organizations(text_plumber,model)
+      
+      if org_list is not None:
+         org_list =org_list[:2]
+         exp_list = exp_list[:2]
    
       if exp ==None:
          exp = "Experience not found"
@@ -222,6 +231,8 @@ def pipeline_start(path):
    print("summary",summary)
    print("certifications",certifications)
    print("projects",projects)
+   print("org_list",org_list)
+   print("exp_list",exp_list)
         
       
    # sno = insert(name,phone_num,passout,degree,college,exp)
@@ -230,7 +241,7 @@ def pipeline_start(path):
    percentage1 = None
    percentage2 = None
    
-   return name,phone_num,countryCode,email,title,latest_organization,exp,degree1,degree2,college1,college2,pass_out_year_1,pass_out_year_2,summary,certifications,projects,percentage1,percentage2,skills['programming_languages'],skills['frontend_skills'],skills['backend_skills'],skills['databases'],skills['other_skills']
+   return name,phone_num,countryCode,email,title,latest_organization,exp,degree1,degree2,college1,college2,pass_out_year_1,pass_out_year_2,summary,certifications,projects,percentage1,percentage2,skills['programming_languages'],skills['frontend_skills'],skills['backend_skills'],skills['databases'],skills['other_skills'],org_list,exp_list
    
    
 
@@ -243,6 +254,7 @@ path2 = "/home/shiva/Downloads/resumes/Azhar khan.pdf"
 
 path3 = "/home/shiva/Downloads/resumes/Abhishek Gunda.pdf"
 
+path4 = "/home/shiva/Downloads/resumes/Dhananjay Kumar Yadav.pdf"
  
 
 path5 = "/home/shiva/Downloads/resumes/Ketan Gwari.pdf"
@@ -274,6 +286,6 @@ path17 = "/home/shiva/Downloads/resumes/Venkata Reddy Yeruva.pdf"
 
 
 #Start of pipeline
-if __name__== '__main__':  
-   pipeline_start(path16)
+if __name__== '__main__':     
+   pipeline_start(path8)
    

@@ -791,8 +791,7 @@ def extract_certifications(lines):
             break
     # print(certification_text)
     if certification_text:
-        certification_text = ''.join(certification_text[1:3])    
-    print("cer",certification_text)    
+        certification_text = ''.join(certification_text[1:3])     
     
     return certification_text        
 
@@ -901,10 +900,13 @@ def extract_organization(text):
             
 
 
+
+
 #Extracts the latest organization using T5 model.
 def extract_latest_organization(text,model):
     
     text = extract_organization(text)
+    
     organization_prompt = f"From the following resume text, extract the name of the most recent organization the candidate has worked for. Focus only on work history and return the organization name \n{text}"
     response = model(organization_prompt, max_length=100, num_return_sequences=True)
     response = response[0]['generated_text']
@@ -956,8 +958,26 @@ def add_skills(skills_dict):
             if skill.lower() not in cat_skills[category]:
                 cat_skills[category].append(skill.lower())
         save_skills_file(cat_skills)
+
+
+
+#add new skills from the matcher
+def add_skills_from_matcher(skills_list):
+    for skill in skills_list:
+        k=0
+        for cat in cat_skills.keys():
+            if skill.lower() in cat_skills[cat]:
+                k+=1
+        if k==0:
+            print(skill)
+            cat_skills['other_skills'].append(skill.lower())
+    save_skills_file(cat_skills)                
                 
                 
+                
+    
+                
+ # saves the json skills file with the updated skills               
 def save_skills_file(cat_skills, skills_1="skills.json"):
     """Save the updated list of skills to the JSON file."""
     with open(skills_1, "w") as file:
@@ -966,10 +986,86 @@ def save_skills_file(cat_skills, skills_1="skills.json"):
     
     
 
+def extract_experience_lines(text):
+     
+    list1=['Work History','Employment','Professional Background','Work Experience','Professional Experience','Employment History',
+          'WORK HISTORY','EMPLOYMENT','PROFESSIONAL BACKGROUND','WORK EXPERIENCE','PROFESSIONAL EXPERIENCE','EMPLOYMENT HISTORY',"EXPERIENCE"]  
     
+    for exp in list1:
+        index = text.find(exp)
+        if index>-1:
+            return text[index:]
+     
+              
     
 
-
+def extract_all_organizations(text,model):
+    
+    text = extract_experience_lines(text)
+     
+    print("TEXT", text)
+    if text is None:
+        return None,None
+    
+    index = text.lower().find("education")
+    
+    if index>20:
+        text = text[:index]
+    
+    pattern = r"(-?\d{4}-?|present|current)"
+    
+    pattern1 = r"-?\d{4}-?"
+   
+    years_list=[]
+    print("ORG TEXT ",text)
+    
+    lines = text.splitlines()
+    
+    lines = [txt for txt in lines if txt.strip() != '']
+      
+    org_list = []
+    exp_years = []
+    k=0
+    for i,line in enumerate(lines):
+        if k==0:
+            match =  re.findall(pattern,line.lower())
+        else:
+            match = re.findall(pattern1,line)    
+        if len(match)>0:
+            k+=1
+            exp_years=exp_years+match
+            org_list.append(lines[i-3])
+            org_list.append(lines[i-2])
+            org_list.append(lines[i-1])
+            org_list.append(lines[i])
+            if i+1<=len(lines)-1:
+                org_list.append(lines[i+1])
+            if i+2<len(lines)-2:    
+                org_list.append(lines[i+2])
+          
+    
+    print(org_list)        
+    print(exp_years)
+    
+    
+    organization_prompt = f"From the following resume text, extract all the names of organizations of the candidate has worked for. Focus only on work history and return all the organization names \n{org_list}"
+    response = model(organization_prompt, max_length=100, num_return_sequences=True)
+    response = response[0]['generated_text']
+    
+    print(response)
+    
+    return response.split(","),exp_years
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
 
 # from skillID import skills_dict

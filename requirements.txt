@@ -3,7 +3,7 @@ spacy
 datetime
 flask
 sklearn
-mysqldb
+mysql
 pymupdf
 pdfplumber
 

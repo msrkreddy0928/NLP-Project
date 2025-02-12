@@ -5,7 +5,7 @@ import mimetypes
 
 
 #Inserts resume data into the parser table if the candidate doesn't already exist in the database.
-def insert_all(name,phoneNo,countryCode,email,jobTitle,organization,expYears,degree1,degree2,passOutYear1,passOutYear2,college1,college2,summary,certifications,projects,percentage1,percentage2,pl,fs,bs,ds,os,list1):
+def insert_all(name,phoneNo,countryCode,email,jobTitle,organization,expYears,degree1,degree2,passOutYear1,passOutYear2,college1,college2,summary,certifications,projects,percentage1,percentage2,pl,fs,bs,ds,os,org,exp,list1):
     
     mydb = db_connection()
     cursor = mydb.cursor()
@@ -24,8 +24,8 @@ def insert_all(name,phoneNo,countryCode,email,jobTitle,organization,expYears,deg
     
     else:
         try:
-            query = "INSERT INTO parser(name,phoneNo,countryCode,email,jobTitle,organization,expYears,degree1,degree2,passOutYear1,passOutYear2,college1,college2,summary,percentage1,percentage2,pl,fs,bs,ds,os,certifications,projects) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-            values = (name,phoneNo,countryCode,email,jobTitle,organization,expYears,degree1,degree2,passOutYear1,passOutYear2,college1,college2,summary,percentage1,percentage2,pl,fs,bs,ds,os,certifications,projects)
+            query = "INSERT INTO parser(name,phoneNo,countryCode,email,jobTitle,organization,expYears,degree1,degree2,passOutYear1,passOutYear2,college1,college2,summary,percentage1,percentage2,pl,fs,bs,ds,os,certifications,projects,allOrg,allExp) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            values = (name,phoneNo,countryCode,email,jobTitle,organization,expYears,degree1,degree2,passOutYear1,passOutYear2,college1,college2,summary,percentage1,percentage2,pl,fs,bs,ds,os,certifications,projects,org,exp)
             cursor.execute(query,values)
             mydb.commit()
         
@@ -128,9 +128,11 @@ def retrieve_all(phoneNo):
     os= feature_list[0][21]
     certifications=feature_list[0][22]
     projects = feature_list[0][23]
+    org = feature_list[0][24]
+    exp = feature_list[0][25]
     
     
-    return name,phoneNo,countryCode,email,jobTitle,organization,yearsOfExp,degree1,degree2,college1,college2,passOutYear1,passOutYear2,summary,certifications,projects,percenatge1,percenatge2,pl,fs,bs,ds,os
+    return name,phoneNo,countryCode,email,jobTitle,organization,yearsOfExp,degree1,degree2,college1,college2,passOutYear1,passOutYear2,summary,certifications,projects,percenatge1,percenatge2,pl,fs,bs,ds,os,org,exp
 
 
 

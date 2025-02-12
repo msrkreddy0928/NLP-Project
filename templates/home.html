@@ -31,7 +31,11 @@
             <button type="submit" class="parse-btn">Parse</button>
            </form>
         </div>
-
+        <div id ="job-page-container">
+        <form id="jobForm" class="job-form">
+            <button type="submit" class="job-btn">Job Matcher</button>
+           </form>
+        </div>
 
             <div class="loading" id="loading">  
                 <span></span>
@@ -42,7 +46,7 @@
         <div class="left-side">
             <div class="results" id="results">
                 <p><a href="/download" download>
-                <button type="submit" class="download-btn">Download Resume</button>
+                <button id = "download-btn" type="submit" class="download-btn">Download Resume</button>
                 </a></p> 
                 <!-- <h3>Parsed Results:</h3> -->
                 <form id="editForm">
@@ -160,81 +164,51 @@
             </div>
             </div>
 
-
-
-            <!-- <div class="section" id="educationSection" style="display: none;">
-                <h4>Education Details <span class="toggle-symbol">(+)</span></h4>
+            <div class="section" id="orgSection" style="display: none;">
+                <h4>Experience Details <span class="toggle-symbol">(+)</span></h4>
                 <div class="section-content">
-                    <div class="result-row">
-                        <label for="college2">College:</label>
-                        <input type="text" name="college2" id="college2">
-                    </div>
-                    <div class="result-row">
-                        <label for="degree2">Degree:</label>
-                        <input type="text" name="degree2" id="degree2">
-                    </div>
-                    <div class="result-row">
-                        <label for="passOutYear2">Passout year:</label>
-                        <input type="text" name="passOutYear2" id="passOutYear2">
-                    </div>
-                    <div class="result-row">
-                        <label for="percentage2">Percentage:</label>
-                        <input type="text" name="percentage2" id="percentage2">
-                    </div>
-                    
-                </div>
-            </div> -->
+                    <button id="addRowBtn">+</button>
+                    <button id="deleteAddedRowsBtn">-</button>
+                        <table id ="org-table">
+                            <thead>  
+                              <tr>
+                                <th>Organization</th>
+                                <th>Starting year</th>
+                                <th>Ending year</th>
+                              </tr>
+                          </thead>
+                          <tbody contenteditable="true">
+                            
+                            </tbody>
+                            </table>
+                         </div>
+                         </div>    
+
 
             <div class="section" id="educationSection" style="display: none;">
                 <h4>Education Details <span class="toggle-symbol">(+)</span></h4>
                 <div class="section-content">
-                    <div class="education-table">
-                        <!-- First Row -->
-                        <div class="education-row">
-                            <div class="education-cell">
-                                <label>Degree:</label>
-                                <input type="text" name="degree1" id="degree11">
-                            </div>
-                            <div class="education-cell">
-                                <label>College:</label>
-                                <input type="text" name="college1" id="college11">
-                            </div>
-                            <div class="education-cell">
-                                <label>Passout Year:</label>
-                                <input type="text" name="passOutYear1" id="passOutYear11">
-                            </div>
-                            <div class="education-cell">
-                                <label>Percentage:</label>
-                                <input type="text" name="percentage1" id="percentage11">
-                            </div>
-                        </div>
-            
-                        <!-- Second Row -->
-                        <div class="education-row">
-                            <div class="education-cell">
-                                <!-- <label>Degree:</label> -->
-                                <input type="text" name="degree2" id="degree2">
-                            </div>
-                            <div class="education-cell">
-                                <!-- <label>College:</label> -->
-                                <input type="text" name="college2" id="college2">
-                            </div>
-                            <div class="education-cell">
-                                <!-- <label>Passout Year:</label> -->
-                                <input type="text" name="passOutYear2" id="passOutYear2">
-                            </div>
-                            <div class="education-cell">
-                                <!-- <label>Percentage:</label> -->
-                                <input type="text" name="percentage2" id="percentage2">
-                            </div>
-                        </div>
+                    <button id="eduaddRowBtn">+</button>
+                    <button id="edudeleteAddedRowsBtn">-</button>
+                        <table id ="education-table">
+                            <thead>  
+                              <tr>
+                                <th>Degree</th>
+                                <th>College</th>
+                                <th>Pass out year</th>
+                                <th>Percentage</th>
+                              </tr>
+                          </thead>
+                          <tbody contenteditable="true">
+                            <td><button class="deleteBtn">Delete</button></td>
+                            </tbody>
+                        </table>   
                     </div>
                 </div>
             </div>
             </div>
-        </div> 
         </div>
-        
+
         <script src="{{url_for('static',filename='script.js')}}">
         </script>
     </body>

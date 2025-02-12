@@ -6,7 +6,7 @@ import sys
 sys.path.append('/home/shiva/Desktop/ML/Files/NLP/src')
 from src.pipelines import pipeline_start
 from src.mysqldb import insert_all,retrieve_all,retrieve_resumes
-from src.feature_extraction import add_title,add_skills
+from src.feature_extraction import add_title,add_skills,add_skills_from_matcher
 from flask_cors import CORS
 import io
 from src.matching import skill_matcher,job_description_matcher
@@ -29,6 +29,11 @@ def home():
    
     return render_template('home.html')
 
+
+@app.route("/jobmatcher")
+def job_matcher_home():
+    
+    return render_template('match.html')
 
 
 # Route for feature extraction from the uploaded resume
@@ -53,7 +58,7 @@ def feature_extraction():
     
     file_data.seek(0)
     
-    name,phoneNo,countryCode,email,jobTitle,organization,yearsOfExp,degree1,degree2,college1,college2,passOutYear1,passOutYear2,summary,certifications,projects,percenatge1,percentage2,pl,fs,bs,ds,oss = pipeline_start(file_data)
+    name,phoneNo,countryCode,email,jobTitle,organization,yearsOfExp,degree1,degree2,college1,college2,passOutYear1,passOutYear2,summary,certifications,projects,percenatge1,percentage2,pl,fs,bs,ds,oss,org_list,exp_list = pipeline_start(file_data)
     
     
     
@@ -68,7 +73,7 @@ def feature_extraction():
     percentage1=None
     percentage2 = None
  
-    dict ={"name":name,"phoneNo":phoneNo,"countryCode":countryCode,"email":email,"jobTitle":jobTitle,"organization":organization,"yearsOfExp":yearsOfExp,"degree1":degree1,"degree2":degree2,"college1":college1,"college2":college2,"passOutYear1":passOutYear1,"passOutYear2":passOutYear2,"summary":summary,"certifications":certifications,"projects":projects,"percentage1":percenatge1,"percentage2":percentage2,"pl":pl,"fs":fs,"bs":bs,"ds":ds,"os":oss}
+    dict ={"name":name,"phoneNo":phoneNo,"countryCode":countryCode,"email":email,"jobTitle":jobTitle,"organization":organization,"yearsOfExp":yearsOfExp,"degree1":degree1,"degree2":degree2,"college1":college1,"college2":college2,"passOutYear1":passOutYear1,"passOutYear2":passOutYear2,"summary":summary,"certifications":certifications,"projects":projects,"percentage1":percenatge1,"percentage2":percentage2,"pl":pl,"fs":fs,"bs":bs,"ds":ds,"os":oss,"org":org_list,"exp":exp_list}
     
     return jsonify(dict), 200 
     
@@ -110,9 +115,10 @@ def save_features():
     else:
         list1.append(file_path)
   
-    print("resume",file_path)    
+    org =','.join(data.get("org"))
+    exp = ','.join(data.get("exp"))     
 
-    message = insert_all(data.get("name"),data.get("phoneNo"),data.get("countryCode"),data.get("email"),data.get("jobTitle"),data.get("organization"),data.get("yearsOfExp"),data.get("degree1"),data.get("degree2"),data.get("passOutYear1"),data.get("passOutYear2"),data.get("college1"),data.get("College2"),data.get("summary"),data.get("certifications"),data.get("projects"),data.get("percentage1"),data.get("percenatge2"),data.get("pl"),data.get("fs"),data.get("bs"),data.get("ds"),data.get("os"),list1)
+    message = insert_all(data.get("name"),data.get("phoneNo"),data.get("countryCode"),data.get("email"),data.get("jobTitle"),data.get("organization"),data.get("yearsOfExp"),data.get("degree1"),data.get("degree2"),data.get("passOutYear1"),data.get("passOutYear2"),data.get("college1"),data.get("College2"),data.get("summary"),data.get("certifications"),data.get("projects"),data.get("percentage1"),data.get("percenatge2"),data.get("pl"),data.get("fs"),data.get("bs"),data.get("ds"),data.get("os"),org,exp,list1)
      
      
     dic ={"message":message}
@@ -127,10 +133,10 @@ def retrieve_features():
     
     print(data.get("phoneNo"))
     
-    name,phoneNo,countryCode,email,jobTitle,organization,yearsOfExp,degree1,degree2,college1,college2,passOutYear1,passOutYear2,summary,certifications,projects,percenatge1,percentage2,pl,fs,bs,ds,os= retrieve_all(data.get("phoneNo")) 
+    name,phoneNo,countryCode,email,jobTitle,organization,yearsOfExp,degree1,degree2,college1,college2,passOutYear1,passOutYear2,summary,certifications,projects,percenatge1,percentage2,pl,fs,bs,ds,os,org,exp= retrieve_all(data.get("phoneNo")) 
  
     
-    dict ={"name":name,"phoneNo":phoneNo,"countryCode":countryCode,"email":email,"jobTitle":jobTitle,"organization":organization,"yearsOfExp":yearsOfExp,"degree1":degree1,"degree2":degree2,"college1":college1,"college2":college2,"passOutYear1":passOutYear1,"passOutYear2":passOutYear2,"summary":summary,"certifications":certifications,"projects":projects,"percentage1":percenatge1,"percentage2":percentage2,"pl":pl,"fs":fs,"bs":bs,"ds":ds,"os":os}
+    dict ={"name":name,"phoneNo":phoneNo,"countryCode":countryCode,"email":email,"jobTitle":jobTitle,"organization":organization,"yearsOfExp":yearsOfExp,"degree1":degree1,"degree2":degree2,"college1":college1,"college2":college2,"passOutYear1":passOutYear1,"passOutYear2":passOutYear2,"summary":summary,"certifications":certifications,"projects":projects,"percentage1":percenatge1,"percentage2":percentage2,"pl":pl,"fs":fs,"bs":bs,"ds":ds,"os":os,"org":org.split(","),"exp":exp.split(",")}
     
     return jsonify(dict)
 
@@ -151,7 +157,7 @@ def retrieve_resumes_from_db():
     
     global file_path
     file_path=download_path
-    name,phoneNo,countryCode,email,jobTitle,organization,yearsOfExp,degree1,degree2,college1,college2,passOutYear1,passOutYear2,summary,certifications,projects,percenatge1,percentage2,pl,fs,bs,ds,oss = pipeline_start(download_path)
+    name,phoneNo,countryCode,email,jobTitle,organization,yearsOfExp,degree1,degree2,college1,college2,passOutYear1,passOutYear2,summary,certifications,projects,percenatge1,percentage2,pl,fs,bs,ds,oss,org_list,exp_list = pipeline_start(download_path)
     
     
     
@@ -167,7 +173,7 @@ def retrieve_resumes_from_db():
     percentage2 = None
     
  
-    dict ={"file":download_path,"name":name,"phoneNo":phoneNo,"countryCode":countryCode,"email":email,"jobTitle":jobTitle,"organization":organization,"yearsOfExp":yearsOfExp,"degree1":degree1,"degree2":degree2,"college1":college1,"college2":college2,"passOutYear1":passOutYear1,"passOutYear2":passOutYear2,"summary":summary,"certifications":certifications,"projects":projects,"percentage1":percenatge1,"percentage2":percentage2,"pl":pl,"fs":fs,"bs":bs,"ds":ds,"os":oss}
+    dict ={"file":download_path,"name":name,"phoneNo":phoneNo,"countryCode":countryCode,"email":email,"jobTitle":jobTitle,"organization":organization,"yearsOfExp":yearsOfExp,"degree1":degree1,"degree2":degree2,"college1":college1,"college2":college2,"passOutYear1":passOutYear1,"passOutYear2":passOutYear2,"summary":summary,"certifications":certifications,"projects":projects,"percentage1":percenatge1,"percentage2":percentage2,"pl":pl,"fs":fs,"bs":bs,"ds":ds,"os":oss,"org":org_list,"exp":exp_list}
     
     return jsonify(dict), 200 
   
@@ -187,6 +193,11 @@ def download_file():
 def match_skills():
     
     data = request.json
+    
+    skills = data.get("skills")
+
+    
+    add_skills_from_matcher(skills.split(","))
     
     dict1 = skill_matcher(data.get("skills"))
     

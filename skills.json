@@ -18,7 +18,8 @@
         "scala",
         "perl",
         "bash",
-        "matlab"
+        "matlab",
+        "none"
     ],
     "frontend_skills": [
         "react",
@@ -98,7 +99,8 @@
         "amazon rds",
         "google bigquery",
         "snowflake",
-        "sql"
+        "sql",
+        "none"
     ],
     "other_skills": [
         "jenkins",
@@ -168,6 +170,8 @@
         "data science",
         "mlops",
         "automl",
-        "feature engineering"
+        "feature engineering",
+        "gen ai",
+        "gen-ai"
     ]
 }
