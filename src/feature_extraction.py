@@ -4,7 +4,7 @@ from transformers import pipeline
 from datetime import date
 import os 
 import sys
-sys.path.append("/home/shiva/Desktop/ML/Files/NLP")
+sys.path.append("/home/shiva/Desktop/ML/Resume Parser/NLP-Project")
 import json   
 
 
@@ -17,14 +17,14 @@ def extract_phone_num(text):
     pattern = r"\(?\+?\(?\d{1,3}\)?[-.\s]?\(?\d{1,4}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,4}"
     numbers = re.findall(pattern, text)
     if len(numbers)<1:
-        return "valid number not found"
+        return None,None
     k=0
     for num in numbers:
         if(len(num)>=10):
             k+=1
             return num[len(num)-10:],num[:len(num)-10]
     if k==0:
-        return "valid number not found"
+        return None,None
   
     
 
@@ -183,7 +183,7 @@ def extract_education_1(lines,model):
 #Extracts the post-graduate (pg) and graduate (grad) degree information from the T5 response.
 def extract_degree(text):
 
-    degree_set_pg =("m.","m.tech","mtech","master","masters","post","m.a")
+    degree_set_pg =("m.","m.tech","mtech","master","masters","post","m.a","mca")
 
     degree_set_grad = ("bachelor","bachelors","arts","b.tech","btech","ba","be","b.","b.e","b.a")
     
@@ -238,7 +238,7 @@ def extract_degree_1(text):
     # degree_set_pg =("m.","m.tech","mtech","master","masters","post","m.a")
     
     degree_set_pg = (
-   "m.tech", "mtech", "master", "masters", "post", "m.a",  "m.", "mba", "msc", "mfa", "m.ed", 
+   "m.tech", "mtech", "master", "masters", "post", "m.a",  "m.", "mba", "msc", "mfa", "m.ed","mca", 
     "ms", "m.phil", "ll.m", "mim", "m.arch", "m.des", "m.s.n", "m.b.a", "m.p.h", "m.j", 
     "m.d", "m.d.s", "dba", "dnp", "dvm", "ed.d", "phd", "md", "jd", "dmd", "dma", "m.dent", 
     "mpa", "mpp", "mim", "m.pharm", "msw", "mat", "m.a.t", "ll.m", "mfa", "mra", "mpp", 
@@ -1062,21 +1062,19 @@ def extract_all_organizations(text,model):
     
     
     
-    
-    
-    
-    
+from skillID import skills_dict
+import re
+def extract_skills_by_id(text):
+    skills_found={}
+    for category,skills in skills_dict.items():
+        list1=[]
+        for skill,skill_id in skills.items():
+            if re.search(r"\b"+re.escape(skill.lower())+r"\b",text,re.IGNORECASE):
+                list1.append(skill_id)
+        
+        
+        skills_found[category] = list1
 
-
-# from skillID import skills_dict
-# import re
-# def extract_skills(text):
-#     skills_found=[]
-#     for category,skills in skills_dict.items():
-#         for skill,skill_id in skills.items():
-#             if re.search(r"\b"+re.escape(skill)+r"\b",text,re.IGNORECASE):
-#                 skills_found.append({
-#                 'skillCategory':category,
-#                 'skillCategoryID':skill_id
-#             })
-#     return skills_found                              
+       
+    print("SKILLS",skills_found)            
+    return skills_found                              

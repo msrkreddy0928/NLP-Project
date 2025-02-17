@@ -50,8 +50,33 @@ def extract_text(path):
 
 
 
+path1="/home/shiva/Downloads/resumes/Nangi Ramesh.pdf"
+path8 = "/home/shiva/Downloads/resumes/Swpana Kumari Sahu.pdf"
+path5 = "/home/shiva/Downloads/resumes/Ketan Gwari.pdf"
+
+# doc = pymupdf.open(path5)
+# header = "Header"  # text in header
+# footer = "Page %i of %i"  # text in footer
+# for page in doc:
+#     page.insert_text((50, 50), header)  # insert header
+#     page.insert_text(  # insert footer 50 points above page bottom
+#         (50, page.rect.height - 50),
+#         footer % (page.number + 1, doc.page_count),
+#     )
+#     print(page.get_textbox(rect=True))
 
 
+import fitz
+
+doc = fitz.open(path8)
+page = doc[0] 
+if page.annots():
+    annotations = list(page.annots())
+    print(annotations)
+    first_annot = page.first_annot
+    rect = first_annot.rect 
+    text = page.get_textbox(rect) 
 
 
+print(page.get_textbox(rect))
 

@@ -3,7 +3,7 @@ import requests
 import pdfplumber
 import os
 import sys
-sys.path.append('/home/shiva/Desktop/ML/Files/NLP/src')
+sys.path.append('/home/shiva/Desktop/ML/Resume Parser/NLP-Project/src')
 from src.pipelines import pipeline_start
 from src.mysqldb import insert_all,retrieve_all,retrieve_resumes
 from src.feature_extraction import add_title,add_skills,add_skills_from_matcher
@@ -76,8 +76,85 @@ def feature_extraction():
     dict ={"name":name,"phoneNo":phoneNo,"countryCode":countryCode,"email":email,"jobTitle":jobTitle,"organization":organization,"yearsOfExp":yearsOfExp,"degree1":degree1,"degree2":degree2,"college1":college1,"college2":college2,"passOutYear1":passOutYear1,"passOutYear2":passOutYear2,"summary":summary,"certifications":certifications,"projects":projects,"percentage1":percenatge1,"percentage2":percentage2,"pl":pl,"fs":fs,"bs":bs,"ds":ds,"os":oss,"org":org_list,"exp":exp_list}
     
     return jsonify(dict), 200 
+
+
+@app.route("/extractdetails",methods=['POST'])
+def feature_extractions():
+    
+
+    if 'file' not in request.files:
+        return "No file part", 400
+    
+    doc = request.files['file']
+
+    
+    global file
+    file=doc
+    
+    global file_data
+    file_data = io.BytesIO(doc.read())
+    
+    if  doc.filename == '':
+        return "No selected file", 400
+    
+    file_data.seek(0)
+    
+    name,phoneNo,countryCode,email,jobTitle,organization,yearsOfExp,degree1,college1,passOutYear1,skills = pipeline_start(file_data)
+    
+    
+    
+    # if degree1 is None:
+    #     degree1=degree2
+    #     passOutYear1=passOutYear2     
+    #     college1=college2
+    #     degree2=None
+    #     passOutYear2=None
+    #     college2=None 
+     
+    # percentage1=None
+    # percentage2 = None
+ 
+    dict ={"name":name,"phoneNo":phoneNo,"countryCode":countryCode,"email":email,"jobTitle":jobTitle,"organization":organization,"yearsOfExp":yearsOfExp,"Highestdegree":degree1,"college":college1,"passOutYear":passOutYear1,"skills":skills}
+    
+    return jsonify(dict), 200  
+
+
+@app.route("/extractdetails1")
+def feature_extractions1():
+
+    # if 'file' not in request.files:
+    #     return "No file part", 400
+    
+    file_url = request.args.get('file_url') 
+
+   
+    
+    if not file_url:
+        return "No file URL provided", 400
+    
+    try:
+        response = requests.get(file_url)
+        response.raise_for_status()  
+    except requests.exceptions.RequestException as e:
+        return f"Error downloading file: {e}", 400 
+    
+
+    try:
+        file_data = io.BytesIO(response.content)
+    
+        name,phoneNo,countryCode,email,jobTitle,organization,yearsOfExp,degree1,college1,passOutYear1,skills = pipeline_start(file_data)
     
  
+        dict ={"name":name,"phoneNo":phoneNo,"countryCode":countryCode,"email":email,"jobTitle":jobTitle,"organization":organization,"yearsOfExp":yearsOfExp,"Highestdegree":degree1,"college1":college1,"passOutYear":passOutYear1,"skills":skills}
+    
+    except:
+        return "Error occured while extracting data"
+    
+
+    return jsonify(dict), 200  
+
+
+
  
  # Route for saving extracted features to the database    
 @app.route("/save", methods=['POST'])
