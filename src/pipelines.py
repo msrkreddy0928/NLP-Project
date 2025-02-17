@@ -1,5 +1,5 @@
 import pdf_text_extraction
-from pdf_text_extraction import extract_text_from_pdf,extract_text
+from pdf_text_extraction import extract_text_from_pdf,extract_text,extract_text_for_cer
 from preprocessing import text_to_words,split_lines,line_remover
 from feature_extraction import extract_phone_num,extract_all_organizations,extract_name,extract_experience,extract_education,pass_out_year_extract,extract_degree,extract_college,extract_summary,extract_education_1,extract_passout,extract_education_text,extract_passout_1,extract_degree_1,extract_summary_1,extract_experience_1,extract_percentage,extract_certifications,extract_college_1,extract_email,extract_title,extract_latest_organization,extract_skills,extract_projects,extract_skills_by_id
 from transformers import pipeline    
@@ -13,8 +13,11 @@ def pipeline_start(path):
    model =pipeline("text2text-generation",model="google/flan-t5-large")
    
    text_pymu,text_list_pymu  = extract_text(path)
+
+
    
-   # print(text_pymu[:700])
+   text_cer, lines_cer = extract_text_for_cer(path)
+
    
    text_plumber = extract_text_from_pdf(path)
       
@@ -69,9 +72,9 @@ def pipeline_start(path):
       
       # extract_percentage(education_text_)
       
-      certifications = extract_certifications(text_list_pymu)
+      # certifications = extract_certifications(text_list_pymu)
       
-      projects = extract_projects(text_list_pymu)
+      # projects = extract_projects(text_list_pymu)
       
       college11,college22 =  extract_college_1(education_lines,model,degree1,degree2)
       
@@ -182,9 +185,9 @@ def pipeline_start(path):
       
       pass_out_year_2 = extract_passout(degrees,degree1,degree2)
       
-      certifications = extract_certifications(lines_plumber)
+      # certifications = extract_certifications(lines_plumber)
       
-      projects = extract_projects(lines_plumber)
+      # projects = extract_projects(lines_plumber)
      
       org_list,exp_list = extract_all_organizations(text_plumber,model)
       
@@ -212,7 +215,10 @@ def pipeline_start(path):
    skills = extract_skills(text_plumber)
 
    skills1 = extract_skills_by_id(text_plumber)   
-
+   
+   certifications = extract_certifications(lines_cer)
+      
+   projects = extract_projects(lines_cer)
  
    print("name",name)
    print("phoneNO",phone_num)
@@ -241,9 +247,9 @@ def pipeline_start(path):
    percentage1 = None
    percentage2 = None
    
-   # return name,phone_num,countryCode,email,title,latest_organization,exp,degree1,degree2,college1,college2,pass_out_year_1,pass_out_year_2,summary,certifications,projects,percentage1,percentage2,skills['programming_languages'],skills['frontend_skills'],skills['backend_skills'],skills['databases'],skills['other_skills'],org_list,exp_list
+   return name,phone_num,countryCode,email,title,latest_organization,exp,degree1,degree2,college1,college2,pass_out_year_1,pass_out_year_2,summary,certifications,projects,percentage1,percentage2,skills['programming_languages'],skills['frontend_skills'],skills['backend_skills'],skills['databases'],skills['other_skills'],org_list,exp_list
    
-   return name,phone_num,countryCode,email,title,org_list[0],exp,degree1,college1,pass_out_year_1,skills1
+   # return name,phone_num,countryCode,email,title,org_list[0],exp,degree1,college1,pass_out_year_1,skills1
    
 
 
@@ -290,5 +296,5 @@ path18 = "/home/shiva/Downloads/resumes/cc7e73b9-453b-40e5-8dac-e48d951b5c81.pdf
 
 #Start of pipeline
 if __name__== '__main__':     
-   pipeline_start(path18)
+   pipeline_start(path16)
    

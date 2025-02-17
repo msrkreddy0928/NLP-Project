@@ -782,37 +782,39 @@ def extract_summary(lines,name,phoneNo):
 #Extracts the certifications section from the resume text.        
 def extract_certifications(lines):
     
-    certification_text = None
-    
+    certification_text =""
+    start_index=None
     for line in lines:
-        if "certification" in line.lower() or "courses" in line.lower() or "certificate" in line.lower():
-            index = lines.index(line)
-            certification_text = lines[index:]
+        if "certificat" in line[0].lower() and len(line[0].split())<=2:
+            start_index = lines.index(line)
             break
-    # print(certification_text)
-    if certification_text:
-        certification_text = ''.join(certification_text[1:3])     
-    
-    return certification_text        
-
-
+    if start_index:
+        for line in lines[start_index+1:]:
+            words = line[0].split()
+            if 0<len(words)<=2 and line[1]==1:
+                break
+            certification_text+="\n"+line[0]        
+    return certification_text
+ 
 
 #Extracts the projects section from the resume text.        
 def extract_projects(lines):
     
-    project_text = None
-    
+    start_index=None
+    project_text=""
     for line in lines:
-        if "Projects" in line or "PROJECTS" in line:
-            index = lines.index(line)
-            project_text = lines[index:]
+        if "project" in line[0].lower() and len(line[0].split())<=2:
+            start_index = lines.index(line)
             break
-    
-    if project_text:
-        project_text = ''.join(project_text[1:3])    
-    print("Per",project_text)    
-    
-    return project_text    
+
+    if start_index:
+        for line in lines[start_index+1:]:
+            words = line[0].split()
+            if 0<len(words)<=2 and line[1]==1:
+                break
+            project_text+= "\n" +line[0]
+    return project_text        
+
 
 
     

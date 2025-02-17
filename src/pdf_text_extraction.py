@@ -54,29 +54,45 @@ path1="/home/shiva/Downloads/resumes/Nangi Ramesh.pdf"
 path8 = "/home/shiva/Downloads/resumes/Swpana Kumari Sahu.pdf"
 path5 = "/home/shiva/Downloads/resumes/Ketan Gwari.pdf"
 
-# doc = pymupdf.open(path5)
-# header = "Header"  # text in header
-# footer = "Page %i of %i"  # text in footer
-# for page in doc:
-#     page.insert_text((50, 50), header)  # insert header
-#     page.insert_text(  # insert footer 50 points above page bottom
-#         (50, page.rect.height - 50),
-#         footer % (page.number + 1, doc.page_count),
-#     )
-#     print(page.get_textbox(rect=True))
+# extract_text(path5)
 
+def extract_text_for_cer(path):
 
-import fitz
+    path.seek(0)
 
-doc = fitz.open(path8)
-page = doc[0] 
-if page.annots():
-    annotations = list(page.annots())
-    print(annotations)
-    first_annot = page.first_annot
-    rect = first_annot.rect 
-    text = page.get_textbox(rect) 
+    extracted_text = ""
+    extract_text_list = []
+    
+    if isinstance(path, str):  
+        doc = fitz.open(path)
+    else:
+        file_stream = io.BytesIO(path.read())  
+        doc = fitz.open(stream=file_stream, filetype="pdf")
+    
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        blocks = page.get_text("dict")["blocks"]  
+        
+        for block in blocks:
+            if block['type'] == 0: 
+                for line in block["lines"]:
+                    for span in line["spans"]:
+                        text = span['text']
+                        if text == " ":
+                            continue
+                        if 'bold' in span['font'].lower():
+                            is_bold = True
+                        else:
+                            is_bold = False
 
+                        if is_bold:
+                            k=1
+                        else:
+                            k=0
 
-print(page.get_textbox(rect))
+                        extract_text_list.append((text, k))
+                        extracted_text += text + "\n"
+    
+    return extracted_text, extract_text_list
+
 
