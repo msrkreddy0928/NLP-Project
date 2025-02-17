@@ -57,8 +57,9 @@ path5 = "/home/shiva/Downloads/resumes/Ketan Gwari.pdf"
 # extract_text(path5)
 
 def extract_text_for_cer(path):
-
-    path.seek(0)
+    
+    if isinstance(path, str)==False:
+        path.seek(0)
 
     extracted_text = ""
     extract_text_list = []

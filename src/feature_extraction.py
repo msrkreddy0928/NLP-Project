@@ -808,11 +808,20 @@ def extract_projects(lines):
             break
 
     if start_index:
+        k=False
         for line in lines[start_index+1:]:
             words = line[0].split()
             if 0<len(words)<=2 and line[1]==1:
                 break
-            project_text+= "\n" +line[0]
+            if start_index+1==lines.index(line):
+                if line[1]==1:
+                    k=True
+            if k:
+                if line[1]==1:
+                    project_text+="\n"+line[0]
+            else:
+                project_text+="\n"+line[0]
+    
     return project_text        
 
 
