@@ -15,7 +15,6 @@ def pipeline_start(path):
    text_pymu,text_list_pymu  = extract_text(path)
 
 
-   
    text_cer, lines_cer = extract_text_for_cer(path)
 
    
